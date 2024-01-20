@@ -2,8 +2,8 @@
 #include <raylib.h>
 
 #include "grid.h"
+#include "block-subclass.cpp"
 
-Grid grid{};
 
 int main()
 {
@@ -13,17 +13,17 @@ int main()
 	// Create raylib game window
 	InitWindow(1000, 1000, "Raylib Tetris");
 	
-	// Check if colors work well
-	grid.grid[0][0] = 1;
-	grid.grid[0][1] = 2;
-	grid.grid[0][2] = 3;
-	grid.grid[0][3] = 4;
+	Grid grid{};
+
+	// Test if block is displayed correctly in screen
+	IBlock block{}; 
 
 	// Create game loop
 	while (WindowShouldClose() == false)
 	{
 		BeginDrawing();
 		grid.Draw();
+		block.Draw();
 		ClearBackground(WHITE);
 		EndDrawing();
 	}

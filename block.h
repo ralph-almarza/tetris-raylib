@@ -2,11 +2,13 @@
 #include <vector>
 #include <map>
 #include "position.h"
+#include "colors.h"
 
 class Block
 {
 public:
 	Block();
+	void Draw();
 	
 	int id;
 	// a 'map' is used to denote the rotation state of the block
@@ -15,5 +17,7 @@ public:
 private:
 	int cellSize{}; 
 	int rotationState{};
+	std::vector<Color> colors{};
+	int pixelOffset{ 1 };
 
 };
