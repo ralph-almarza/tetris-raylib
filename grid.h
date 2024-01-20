@@ -8,7 +8,6 @@ public:
 	Grid();
 	void Print();			
 	void Draw();
-	std::vector<Color> GetCellColors();
 
 	int grid[20][10] { 0 }; // array of 20 rows and 10 columns
 
