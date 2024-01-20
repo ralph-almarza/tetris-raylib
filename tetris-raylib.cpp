@@ -1,6 +1,10 @@
 #include <iostream>
 #include <raylib.h>
 
+#include "grid.h"
+
+Grid grid{};
+
 int main()
 {
 	// Fixed FPS

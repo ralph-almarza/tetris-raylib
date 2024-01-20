@@ -7,6 +7,7 @@ Grid::Grid() // Constructor
 	numRows = { 20 };
 	numColumns = { 10 };
 	cellSize = { 30 };
+	Print();
 }
 
 void Grid::Print()
@@ -17,5 +18,6 @@ void Grid::Print()
 		{
 			std::cout << grid[row][column] << " ";
 		}
+		std::cout << std::endl;
 	}
 }

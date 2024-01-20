@@ -8,7 +8,7 @@ public:
 	void Print();			// outputs the grid in console
 
 private:
-	int numRows{};	// height of game grid 
+	int numRows{};		// height of game grid 
 	int numColumns{};	// width of game grid 
-	int cellSize{}; // # of pixels denoting one cell in game grid 
+	int cellSize{};		// # of pixels denoting one cell in game grid 
 };
