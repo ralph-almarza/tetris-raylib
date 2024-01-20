@@ -10,7 +10,7 @@ public:
 	Block();
 	void Draw();
 	
-	int id;
+	int id{};
 	// a 'map' is used to denote the rotation state of the block
 	std::map<int, std::vector<Position>> cells; 
 

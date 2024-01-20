@@ -24,7 +24,7 @@ int main()
 		BeginDrawing();
 		grid.Draw();
 		block.Draw();
-		ClearBackground(WHITE);
+		ClearBackground(BLACK);
 		EndDrawing();
 	}
 
