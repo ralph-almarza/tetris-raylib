@@ -98,6 +98,9 @@ void Game::RotateBlockCounterClockwise()
 // Update this function in order for the block to move back to center after being held
 void Game::HoldBlock()
 {
+	// Move the current block back to its initial position
+	currentBlock.ResetPosition(0, 0);
+	
 	// Remove the current block from screen and
 	// Put the current block into held block
 	heldBlock = { currentBlock };
@@ -114,6 +117,9 @@ void Game::HoldBlock()
 
 void Game::ReleaseHeldBlock()
 {
+	// Move the current block back to its initial position
+	currentBlock.ResetPosition(0, 0);
+
 	// Remove the current block from the screen
 	// Swap the held block with the current block
 	std::swap(heldBlock, currentBlock);

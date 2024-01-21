@@ -11,6 +11,7 @@ public:
 	void Draw();
 	void Move(int row, int column);
 	std::vector<Position> GetCellPosition();
+	void ResetPosition(int resetRow, int resetColumn);
 
 	int id{};
 	std::map<int, std::vector<Position>> cells; 
