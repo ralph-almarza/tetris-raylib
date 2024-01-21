@@ -56,7 +56,10 @@ void Game::HandleInput()
 		MoveBlockDown();
 		break;
 	case KEY_H:
-		HoldBlock();
+		if (!isBlockHeld)
+			HoldBlock();
+		else if (isBlockHeld)
+			ReleaseHeldBlock();
 		break;
 	}
 }
@@ -78,20 +81,26 @@ void Game::MoveBlockDown()
 
 void Game::HoldBlock()
 {
-	if (!isBlockHeld)
-	{
-		// Remove the current block from screen
+	// Remove the current block from screen and
+	// Put the current block into held block
+	heldBlock = { currentBlock };
 
-		// Put the current block into held block
-		heldBlock = { currentBlock };
+	// Set a flag indicating the block is held
+	isBlockHeld = { true };
 
-		// Set a flag indicating the block is held
-		isBlockHeld = { true };
+	// Get the next block in the bag to replace the held block
+	currentBlock = { GetRandomBlock() };
 
-		// Get the next block in the bag to replace the held block
-		currentBlock = { GetRandomBlock() };
+	// Draw the new current block
+	currentBlock.Draw();
+}
 
-		// Draw the new current block
-		currentBlock.Draw();
-	}
+void Game::ReleaseHeldBlock()
+{
+	// Remove the current block from the screen
+	// Swap the held block with the current block
+	std::swap(heldBlock, currentBlock);
+
+	// Redraw the game with the new current block
+	currentBlock.Draw();
 }

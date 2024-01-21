@@ -13,7 +13,9 @@ public:
 	void MoveBlockRight();
 	void MoveBlockLeft();
 	void MoveBlockDown();
+
 	void HoldBlock();
+	void ReleaseHeldBlock();
 
 	Grid grid{};
 
