@@ -99,7 +99,18 @@ void Game::RotateBlockCounterClockwise()
 void Game::HoldBlock()
 {
 	// Move the current block back to its initial position
-	currentBlock.ResetPosition(0, 0);
+	switch (currentBlock.id)
+	{
+	case 1:
+		currentBlock.ResetPosition(-1, 3);
+		break;
+	case 2:
+		currentBlock.ResetPosition(0, 4);
+		break;
+	default:
+		currentBlock.ResetPosition(0, 3);
+		break;
+	}
 	
 	// Remove the current block from screen and
 	// Put the current block into held block
@@ -111,14 +122,25 @@ void Game::HoldBlock()
 	// Get the next block in the bag to replace the held block
 	currentBlock = { GetRandomBlock() };
 
-	// Draw the new current block
+	// Redraw the game with the new current block
 	currentBlock.Draw();
 }
 
 void Game::ReleaseHeldBlock()
 {
 	// Move the current block back to its initial position
-	currentBlock.ResetPosition(0, 0);
+	switch (currentBlock.id)
+	{
+	case 1:
+		currentBlock.ResetPosition(-1, 3);
+		break;
+	case 2:
+		currentBlock.ResetPosition(0, 4);
+		break;
+	default:
+		currentBlock.ResetPosition(0, 3);
+		break;
+	}
 
 	// Remove the current block from the screen
 	// Swap the held block with the current block
