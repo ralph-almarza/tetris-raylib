@@ -13,4 +13,6 @@ public:
 
 private:
 	std::vector<Block> blockGrouping{};
+	Block currentBlock{};
+	Block nextBlock{};
 };
