@@ -18,6 +18,9 @@ int main()
 	// Test if block is displayed correctly in screen
 	IBlock block{}; 
 
+	// Test if block changes position in screen
+	block.Move(4, 3);
+
 	// Create game loop
 	while (WindowShouldClose() == false)
 	{
