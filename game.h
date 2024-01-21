@@ -6,13 +6,13 @@ class Game
 {
 public:
 	Game();
+	std::vector<Block> RandomizeBag();
 	Block GetRandomBlock();
-	std::vector<Block> GetAllBlocks();
+	void Draw();
 
 	Grid grid{};
 
 private:
-	std::vector<Block> blockGrouping{};
+	std::vector<Block> blockBag{};
 	Block currentBlock{};
-	Block nextBlock{};
 };

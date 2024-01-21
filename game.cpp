@@ -1,26 +1,42 @@
 #include "game.h"
 #include <random> // For generating random blocks
+#include <algorithm> // For seeding the RNG
 
 Game::Game()
 {
 	grid = { Grid() };
-	blockGrouping = GetAllBlocks();
+	blockBag = RandomizeBag();
+	currentBlock = GetRandomBlock();
 }
 
 // Take careful attention in this function when implementing hold and also the queue of next pieces 
-Block Game::GetRandomBlock()
+std::vector<Block> Game::RandomizeBag()
 {
-	if (blockGrouping.empty())
-	{
-		blockGrouping = GetAllBlocks();
-	}
-	int randomIndex = rand() % blockGrouping.size();
-	Block block = blockGrouping[randomIndex];
-	blockGrouping.erase(blockGrouping.begin() + randomIndex);
-	return block;
+	blockBag = { IBlock(), OBlock(), SBlock(), ZBlock(), LBlock(), JBlock(), TBlock() };
+
+	// Seed the random number generator
+	std::random_device rd;
+	std::mt19937 rng(rd());
+
+	// Shuffle the grouping of blocks
+	std::shuffle(blockBag.begin(), blockBag.end(), rng);
+	
+	return blockBag;
 }
 
-std::vector<Block> Game::GetAllBlocks()
+Block Game::GetRandomBlock()
 {
-	return { IBlock(), OBlock(), SBlock(), ZBlock(), LBlock(), JBlock(), TBlock() };
+	if(blockBag.empty())
+		blockBag = RandomizeBag();
+
+	currentBlock = blockBag[0]; // Gets the first element of the random block
+	blockBag.erase(blockBag.begin());
+
+	return currentBlock;
+}
+
+void Game::Draw()
+{
+	grid.Draw();
+	currentBlock.Draw();
 }
