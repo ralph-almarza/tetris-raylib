@@ -104,6 +104,9 @@ void Game::RotateBlockClockwise()
 		currentBlock.Move(0, -1);
 	else if (IsBlockOutsideLeft())
 		currentBlock.Move(0, 1);
+
+	if (IsBlockOutsideDown())
+		currentBlock.Move(-1, 0);
 }
 
 void Game::RotateBlockCounterClockwise()
@@ -113,6 +116,9 @@ void Game::RotateBlockCounterClockwise()
 		currentBlock.Move(0, -1);
 	else if (IsBlockOutsideLeft())
 		currentBlock.Move(0, 1);
+
+	if (IsBlockOutsideDown())
+		currentBlock.Move(-1, 0);
 }
 
 void Game::Rotate180()
@@ -122,6 +128,9 @@ void Game::Rotate180()
 		currentBlock.Move(0, -1);
 	else if (IsBlockOutsideLeft())
 		currentBlock.Move(0, 1);
+
+	if (IsBlockOutsideDown())
+		currentBlock.Move(-1, 0);
 }
 
 
