@@ -26,6 +26,7 @@ private:
 	bool IsBlockOutsideRight();
 	bool IsBlockOutsideLeft();
 	bool IsBlockOutsideDown();
+	void CollisionsCheck();
 
 	std::vector<Block> blockBag{};
 	Block currentBlock{};

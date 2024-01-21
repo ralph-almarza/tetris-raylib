@@ -77,8 +77,7 @@ void Game::HandleInput()
 void Game::MoveBlockRight()
 {
 	currentBlock.Move(0, 1);
-	if (IsBlockOutsideRight())
-		currentBlock.Move(0, -1);
+	CollisionsCheck();
 }
 
 void Game::MoveBlockLeft()
@@ -91,48 +90,27 @@ void Game::MoveBlockLeft()
 void Game::MoveBlockDown()
 {
 	currentBlock.Move(1, 0);
-	if (IsBlockOutsideDown())
-		currentBlock.Move(-1, 0);
+	CollisionsCheck();
 }
 
 // For the rotation states, modular arithmetic was used
-// Rotates are still broken at the bottom
 void Game::RotateBlockClockwise()
 {
 	currentBlock.rotationState = (currentBlock.rotationState + 1) % 4;
-	if (IsBlockOutsideRight())
-		currentBlock.Move(0, -1);
-	else if (IsBlockOutsideLeft())
-		currentBlock.Move(0, 1);
-
-	if (IsBlockOutsideDown())
-		currentBlock.Move(-1, 0);
+	CollisionsCheck();
 }
 
 void Game::RotateBlockCounterClockwise()
 {
 	currentBlock.rotationState = (currentBlock.rotationState - 1 + 4) % 4;
-	if (IsBlockOutsideRight())
-		currentBlock.Move(0, -1);
-	else if (IsBlockOutsideLeft())
-		currentBlock.Move(0, 1);
-
-	if (IsBlockOutsideDown())
-		currentBlock.Move(-1, 0);
+	CollisionsCheck();
 }
 
 void Game::Rotate180()
 {
 	currentBlock.rotationState = (currentBlock.rotationState + 2) % 4;
-	if (IsBlockOutsideRight())
-		currentBlock.Move(0, -1);
-	else if (IsBlockOutsideLeft())
-		currentBlock.Move(0, 1);
-
-	if (IsBlockOutsideDown())
-		currentBlock.Move(-1, 0);
+	CollisionsCheck();
 }
-
 
 void Game::HoldBlock()
 {
@@ -221,4 +199,14 @@ bool Game::IsBlockOutsideDown()
 			return true;
 	}
 	return false;
+}
+
+void Game::CollisionsCheck()
+{
+	if (IsBlockOutsideRight())
+		currentBlock.Move(0, -1);
+	else if (IsBlockOutsideLeft())
+		currentBlock.Move(0, 1);
+	else if (IsBlockOutsideDown())
+		currentBlock.Move(-1, 0);
 }
