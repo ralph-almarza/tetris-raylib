@@ -19,6 +19,7 @@ int main()
 	// Create game loop
 	while (WindowShouldClose() == false)
 	{
+		game.HandleInput();
 		BeginDrawing();
 		game.Draw();
 		ClearBackground(BLACK);

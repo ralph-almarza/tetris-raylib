@@ -10,6 +10,11 @@ public:
 	Block GetRandomBlock();
 	void Draw();
 
+	void HandleInput();
+	void MoveBlockRight();
+	void MoveBlockLeft();
+	void MoveBlockDown();
+
 	Grid grid{};
 
 private:
