@@ -22,9 +22,11 @@ public:
 	Grid grid{};
 
 private:
+	bool IsBlockOutside();
 	std::vector<Block> blockBag{};
 	Block currentBlock{};
 	Block heldBlock{};
-
 	bool isBlockHeld{ false };
+	
+
 };

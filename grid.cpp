@@ -37,3 +37,11 @@ void Grid::Draw() // draws the grid in raylib game window
 		}
 	}
 }
+
+bool Grid::IsCellOutside(int row, int column)
+{
+	if ((row >= 0 && row < numRows) && (column >= 0 && column < numColumns))
+		return false;
+	else
+		return true; 
+}

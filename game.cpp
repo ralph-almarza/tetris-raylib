@@ -67,16 +67,22 @@ void Game::HandleInput()
 void Game::MoveBlockRight()
 {
 	currentBlock.Move(0, 1);
+	if (IsBlockOutside())
+		currentBlock.Move(0, -1);
 }
 
 void Game::MoveBlockLeft()
 {
 	currentBlock.Move(0, -1);
+	if (IsBlockOutside())
+		currentBlock.Move(0, 1);
 }
 
 void Game::MoveBlockDown()
 {
 	currentBlock.Move(1, 0);
+	if (IsBlockOutside())
+		currentBlock.Move(-1, 0);
 }
 
 void Game::RotateBlockClockwise()
@@ -89,6 +95,7 @@ void Game::RotateBlockCounterClockwise()
 
 }
 
+// Update this function in order for the block to move back to center after being held
 void Game::HoldBlock()
 {
 	// Remove the current block from screen and
@@ -113,4 +120,15 @@ void Game::ReleaseHeldBlock()
 
 	// Redraw the game with the new current block
 	currentBlock.Draw();
+}
+
+bool Game::IsBlockOutside()
+{
+	std::vector<Position> tiles = currentBlock.GetCellPosition();
+	for (Position item : tiles) // Checks for each cell in the block if it's outside
+	{
+		if (grid.IsCellOutside(item.row, item.column))
+			return true;
+	}
+	return false;
 }

@@ -8,6 +8,7 @@ public:
 	Grid();
 	void Print();			
 	void Draw();
+	bool IsCellOutside(int row, int column);
 
 	int grid[20][10] { 0 }; // array of 20 rows and 10 columns
 
