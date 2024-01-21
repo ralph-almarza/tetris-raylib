@@ -19,6 +19,7 @@ public:
 	void Rotate180();
 	void HoldBlock();
 	void ReleaseHeldBlock();
+	void CheckCollisions();
 
 	Grid grid{};
 
@@ -26,12 +27,13 @@ private:
 	bool IsBlockOutsideRight();
 	bool IsBlockOutsideLeft();
 	bool IsBlockOutsideDown();
-	void CollisionsCheck();
+	void LockBlock();
+	bool DoesBlockFit();
 
 	std::vector<Block> blockBag{};
 	Block currentBlock{};
 	Block heldBlock{};
 	bool isBlockHeld{ false };
-	
+	Block nextBlock{};
 
 };

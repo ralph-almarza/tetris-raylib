@@ -10,7 +10,7 @@ Game::Game()
 	currentBlock = GetRandomBlock();
 }
 
-// Take careful attention in this function when implementing hold and also the queue of next pieces 
+// Take careful attention in this function when implementing the queue of next pieces 
 std::vector<Block> Game::RandomizeBag()
 {
 	blockBag = { IBlock(), OBlock(), SBlock(), ZBlock(), LBlock(), JBlock(), TBlock() };
@@ -71,13 +71,18 @@ void Game::HandleInput()
 		else if (isBlockHeld)
 			ReleaseHeldBlock();
 		break;
+	case KEY_SPACE:
+		LockBlock();
+		break;
 	}
 }
 
 void Game::MoveBlockRight()
 {
 	currentBlock.Move(0, 1);
-	CollisionsCheck();
+	if (IsBlockOutsideRight())
+		currentBlock.Move(0, -1);
+	CheckCollisions();
 }
 
 void Game::MoveBlockLeft()
@@ -85,31 +90,34 @@ void Game::MoveBlockLeft()
 	currentBlock.Move(0, -1);
 	if (IsBlockOutsideLeft())
 		currentBlock.Move(0, 1);
+	CheckCollisions();
 }
 
 void Game::MoveBlockDown()
 {
 	currentBlock.Move(1, 0);
-	CollisionsCheck();
+	if (IsBlockOutsideLeft())
+		currentBlock.Move(-1, 0);
+	CheckCollisions();
 }
 
 // For the rotation states, modular arithmetic was used
 void Game::RotateBlockClockwise()
 {
 	currentBlock.rotationState = (currentBlock.rotationState + 1) % 4;
-	CollisionsCheck();
+	CheckCollisions();
 }
 
 void Game::RotateBlockCounterClockwise()
 {
 	currentBlock.rotationState = (currentBlock.rotationState - 1 + 4) % 4;
-	CollisionsCheck();
+	CheckCollisions();
 }
 
 void Game::Rotate180()
 {
 	currentBlock.rotationState = (currentBlock.rotationState + 2) % 4;
-	CollisionsCheck();
+	CheckCollisions();
 }
 
 void Game::HoldBlock()
@@ -181,7 +189,7 @@ bool Game::IsBlockOutsideRight()
 bool Game::IsBlockOutsideLeft()
 {
 	std::vector<Position> tiles = currentBlock.GetCellPosition();
-	for (Position item : tiles) // Checks for each cell in the block if it's outside
+	for (Position item : tiles)
 	{
 		if (grid.IsCellOutside(item.row, item.column) && item.column < 0)
 			return true;
@@ -193,7 +201,7 @@ bool Game::IsBlockOutsideLeft()
 bool Game::IsBlockOutsideDown()
 {
 	std::vector<Position> tiles = currentBlock.GetCellPosition();
-	for (Position item : tiles) // Checks for each cell in the block if it's outside
+	for (Position item : tiles)
 	{
 		if (grid.IsCellOutside(item.row, item.column))
 			return true;
@@ -201,12 +209,37 @@ bool Game::IsBlockOutsideDown()
 	return false;
 }
 
-void Game::CollisionsCheck()
+void Game::CheckCollisions()
 {
-	if (IsBlockOutsideRight())
+	if (IsBlockOutsideRight() || !DoesBlockFit())
 		currentBlock.Move(0, -1);
-	else if (IsBlockOutsideLeft())
+
+	if (IsBlockOutsideLeft() || !DoesBlockFit())
 		currentBlock.Move(0, 1);
-	else if (IsBlockOutsideDown())
+
+	if (IsBlockOutsideDown())
 		currentBlock.Move(-1, 0);
+
+	if (!DoesBlockFit())
+		currentBlock.Move(-1, 0);
+}
+
+void Game::LockBlock()
+{
+	std::vector<Position> tiles = currentBlock.GetCellPosition();
+	for (Position item : tiles)
+		grid.grid[item.row][item.column] = currentBlock.id;
+	currentBlock = nextBlock;
+	nextBlock = GetRandomBlock();
+}
+
+bool Game::DoesBlockFit()
+{
+	std::vector<Position>tiles = currentBlock.GetCellPosition();
+	for (Position item : tiles)
+	{
+		if (grid.IsCellEmpty(item.row, item.column) == false)
+			return false;
+	}
+	return true;
 }

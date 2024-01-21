@@ -3,6 +3,8 @@
 
 #include "game.h"
 
+// Pls fix I Block rotation, i tried
+// Pls fix collisions (Blocks slides upwards when moving to the left)
 
 int main()
 {
@@ -25,6 +27,6 @@ int main()
 		ClearBackground(BLACK);
 		EndDrawing();
 	}
-
+	game.grid.Print(); // Output grid in console
 	return 0;
 }
