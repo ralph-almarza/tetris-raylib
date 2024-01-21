@@ -35,7 +35,7 @@ Block Game::GetRandomBlock()
 	return currentBlock;
 }
 
-void Game::Draw()
+void Game::Draw() // Draws the object in the game screen
 {
 	grid.Draw();
 	currentBlock.Draw();
@@ -55,6 +55,9 @@ void Game::HandleInput()
 	case KEY_DOWN:
 		MoveBlockDown();
 		break;
+	case KEY_H:
+		HoldBlock();
+		break;
 	}
 }
 
@@ -73,3 +76,22 @@ void Game::MoveBlockDown()
 	currentBlock.Move(1, 0);
 }
 
+void Game::HoldBlock()
+{
+	if (!isBlockHeld)
+	{
+		// Remove the current block from screen
+
+		// Put the current block into held block
+		heldBlock = { currentBlock };
+
+		// Set a flag indicating the block is held
+		isBlockHeld = { true };
+
+		// Get the next block in the bag to replace the held block
+		currentBlock = { GetRandomBlock() };
+
+		// Draw the new current block
+		currentBlock.Draw();
+	}
+}
