@@ -1,6 +1,7 @@
-#include "game.h"
 #include <random> // For generating random blocks
 #include <algorithm> // For seeding the RNG
+
+#include "game.h"
 
 Game::Game()
 {
@@ -55,6 +56,15 @@ void Game::HandleInput()
 	case KEY_DOWN:
 		MoveBlockDown();
 		break;
+	case KEY_PERIOD:
+		RotateBlockClockwise();
+		break;
+	case KEY_COMMA:
+		RotateBlockCounterClockwise();
+		break;
+	case KEY_SLASH:
+		Rotate180();
+		break;
 	case KEY_H:
 		if (!isBlockHeld)
 			HoldBlock();
@@ -67,35 +77,54 @@ void Game::HandleInput()
 void Game::MoveBlockRight()
 {
 	currentBlock.Move(0, 1);
-	if (IsBlockOutside())
+	if (IsBlockOutsideRight())
 		currentBlock.Move(0, -1);
 }
 
 void Game::MoveBlockLeft()
 {
 	currentBlock.Move(0, -1);
-	if (IsBlockOutside())
+	if (IsBlockOutsideLeft())
 		currentBlock.Move(0, 1);
 }
 
 void Game::MoveBlockDown()
 {
 	currentBlock.Move(1, 0);
-	if (IsBlockOutside())
+	if (IsBlockOutsideDown())
 		currentBlock.Move(-1, 0);
 }
 
+// For the rotation states, modular arithmetic was used
+// Rotates are still broken at the bottom
 void Game::RotateBlockClockwise()
 {
-
+	currentBlock.rotationState = (currentBlock.rotationState + 1) % 4;
+	if (IsBlockOutsideRight())
+		currentBlock.Move(0, -1);
+	else if (IsBlockOutsideLeft())
+		currentBlock.Move(0, 1);
 }
 
 void Game::RotateBlockCounterClockwise()
 {
-
+	currentBlock.rotationState = (currentBlock.rotationState - 1 + 4) % 4;
+	if (IsBlockOutsideRight())
+		currentBlock.Move(0, -1);
+	else if (IsBlockOutsideLeft())
+		currentBlock.Move(0, 1);
 }
 
-// Update this function in order for the block to move back to center after being held
+void Game::Rotate180()
+{
+	currentBlock.rotationState = (currentBlock.rotationState + 2) % 4;
+	if (IsBlockOutsideRight())
+		currentBlock.Move(0, -1);
+	else if (IsBlockOutsideLeft())
+		currentBlock.Move(0, 1);
+}
+
+
 void Game::HoldBlock()
 {
 	// Move the current block back to its initial position
@@ -150,7 +179,31 @@ void Game::ReleaseHeldBlock()
 	currentBlock.Draw();
 }
 
-bool Game::IsBlockOutside()
+bool Game::IsBlockOutsideRight()
+{
+	std::vector<Position> tiles = currentBlock.GetCellPosition();
+	for (Position item : tiles) // Checks for each cell in the block if it's outside
+	{
+		if (grid.IsCellOutside(item.row, item.column) && item.column > 9)
+			return true;
+	}
+	return false;
+
+}
+
+bool Game::IsBlockOutsideLeft()
+{
+	std::vector<Position> tiles = currentBlock.GetCellPosition();
+	for (Position item : tiles) // Checks for each cell in the block if it's outside
+	{
+		if (grid.IsCellOutside(item.row, item.column) && item.column < 0)
+			return true;
+	}
+	return false;
+
+}
+
+bool Game::IsBlockOutsideDown()
 {
 	std::vector<Position> tiles = currentBlock.GetCellPosition();
 	for (Position item : tiles) // Checks for each cell in the block if it's outside

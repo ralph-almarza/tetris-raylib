@@ -2,6 +2,8 @@
 #include <vector>
 #include <raylib.h>
 
+#include "position.h"
+
 class Grid
 {
 public:

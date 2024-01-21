@@ -16,13 +16,17 @@ public:
 	void MoveBlockDown();
 	void RotateBlockClockwise();
 	void RotateBlockCounterClockwise();
+	void Rotate180();
 	void HoldBlock();
 	void ReleaseHeldBlock();
 
 	Grid grid{};
 
 private:
-	bool IsBlockOutside();
+	bool IsBlockOutsideRight();
+	bool IsBlockOutsideLeft();
+	bool IsBlockOutsideDown();
+
 	std::vector<Block> blockBag{};
 	Block currentBlock{};
 	Block heldBlock{};
