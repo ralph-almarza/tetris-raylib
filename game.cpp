@@ -79,6 +79,16 @@ void Game::MoveBlockDown()
 	currentBlock.Move(1, 0);
 }
 
+void Game::RotateBlockClockwise()
+{
+
+}
+
+void Game::RotateBlockCounterClockwise()
+{
+
+}
+
 void Game::HoldBlock()
 {
 	// Remove the current block from screen and

@@ -9,11 +9,13 @@ public:
 	std::vector<Block> RandomizeBag();
 	Block GetRandomBlock();
 	void Draw();
+
 	void HandleInput();
 	void MoveBlockRight();
 	void MoveBlockLeft();
 	void MoveBlockDown();
-
+	void RotateBlockClockwise();
+	void RotateBlockCounterClockwise();
 	void HoldBlock();
 	void ReleaseHeldBlock();
 
