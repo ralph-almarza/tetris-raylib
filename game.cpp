@@ -63,7 +63,6 @@ void Game::RandomizeBag()
 	// Shuffle the grouping of blocks
 	std::shuffle(blockBag.begin(), blockBag.end(), rng);
 }
-
 Block Game::GetRandomBlock()
 {
 	if (blockBag.empty())
