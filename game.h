@@ -36,6 +36,4 @@ private:
 	Block nextBlock{};
 
 	bool isHoldUsed;
-
-	std::vector<Block> blocks;
 };
