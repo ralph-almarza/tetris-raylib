@@ -10,9 +10,9 @@ Block::Block()
 void Block::Draw()
 {
 	std::vector<Position> tiles = GetCellPosition();
-	for (Position item : tiles)
+	for (const Position& tilePosition : tiles)
 	{
-		DrawRectangle(item.column * cellSize + pixelOffset, item.row * cellSize + pixelOffset,
+		DrawRectangle(tilePosition.column * cellSize + pixelOffset, tilePosition.row * cellSize + pixelOffset,
 			cellSize - pixelOffset, cellSize - pixelOffset, colors[id]);
 	}
 }
@@ -25,16 +25,13 @@ void Block::Move(int row, int column) // Used to change the block's position in 
 
 std::vector<Position> Block::GetCellPosition() // Gets current position of block
 {
-	// Local orientation of the block (Rotation State)
-	std::vector<Position> tiles = cells[rotationState];
-
 	// Denotes how far the block moved from its initial position 
 	std::vector<Position> movedTiles{};
 
 	// New Position
-	for (Position item : tiles)
+	for (const Position& tilePosition : cells[rotationState])
 	{
-		Position newPosition = Position(item.row + rowOffset, item.column + columnOffset);
+		Position newPosition = Position(tilePosition.row + rowOffset, tilePosition.column + columnOffset);
 		movedTiles.push_back(newPosition);
 	}
 
@@ -43,9 +40,7 @@ std::vector<Position> Block::GetCellPosition() // Gets current position of block
 
 void Block::ResetPosition(int resetRow, int resetColumn)
 {
-	rowOffset = 0;
-	columnOffset = 3;
-	rotationState = 0;
+	rotationState = 0; // Position resets typically involves resetting rotation
 
 	rowOffset = resetRow;
 	columnOffset = resetColumn;
