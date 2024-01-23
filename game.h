@@ -18,7 +18,6 @@ public:
 	void RotateBlockCounterClockwise();
 	void Rotate180();
 	void HoldBlock();
-	void ReleaseHeldBlock();
 	void CheckCollisions();
 
 	Grid grid{};
@@ -33,7 +32,8 @@ private:
 	std::vector<Block> blockBag{};
 	Block currentBlock{};
 	Block heldBlock{};
-	bool isBlockHeld{ false };
+	bool isHoldEmpty{};
 	Block nextBlock{};
 
+	bool isHoldUsed;
 };

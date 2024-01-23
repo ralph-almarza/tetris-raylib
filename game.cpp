@@ -8,9 +8,10 @@ Game::Game()
 	grid = { Grid() };
 	blockBag = RandomizeBag();
 	currentBlock = GetRandomBlock();
+	isHoldEmpty = { true };
+	isHoldUsed = { false };
 }
 
-// Take careful attention in this function when implementing the queue of next pieces 
 std::vector<Block> Game::RandomizeBag()
 {
 	blockBag = { IBlock(), OBlock(), SBlock(), ZBlock(), LBlock(), JBlock(), TBlock() };
@@ -24,7 +25,6 @@ std::vector<Block> Game::RandomizeBag()
 	
 	return blockBag;
 }
-
 Block Game::GetRandomBlock()
 {
 	if(blockBag.empty())
@@ -66,10 +66,7 @@ void Game::HandleInput()
 		Rotate180();
 		break;
 	case KEY_H:
-		if (!isBlockHeld)
-			HoldBlock();
-		else if (isBlockHeld)
-			ReleaseHeldBlock();
+		HoldBlock();
 		break;
 	case KEY_SPACE:
 		LockBlock();
@@ -84,7 +81,6 @@ void Game::MoveBlockRight()
 		currentBlock.Move(0, -1);
 	CheckCollisions();
 }
-
 void Game::MoveBlockLeft()
 {
 	currentBlock.Move(0, -1);
@@ -92,7 +88,6 @@ void Game::MoveBlockLeft()
 		currentBlock.Move(0, 1);
 	CheckCollisions();
 }
-
 void Game::MoveBlockDown()
 {
 	currentBlock.Move(1, 0);
@@ -107,13 +102,11 @@ void Game::RotateBlockClockwise()
 	currentBlock.rotationState = (currentBlock.rotationState + 1) % 4;
 	CheckCollisions();
 }
-
 void Game::RotateBlockCounterClockwise()
 {
 	currentBlock.rotationState = (currentBlock.rotationState - 1 + 4) % 4;
 	CheckCollisions();
 }
-
 void Game::Rotate180()
 {
 	currentBlock.rotationState = (currentBlock.rotationState + 2) % 4;
@@ -122,56 +115,48 @@ void Game::Rotate180()
 
 void Game::HoldBlock()
 {
-	// Move the current block back to its initial position
-	switch (currentBlock.id)
+	if (!isHoldUsed)
 	{
-	case 1:
-		currentBlock.ResetPosition(-1, 3);
-		break;
-	case 2:
-		currentBlock.ResetPosition(0, 4);
-		break;
-	default:
-		currentBlock.ResetPosition(0, 3);
-		break;
+		// Move the current block back to its initial position
+		switch (currentBlock.id)
+		{
+		case 1:
+			currentBlock.ResetPosition(-1, 3);
+			break;
+		case 2:
+			currentBlock.ResetPosition(0, 4);
+			break;
+		default:
+			currentBlock.ResetPosition(0, 3);
+			break;
+		}
+
+		if (isHoldEmpty)
+		{
+			// Remove the current block from the screen
+			heldBlock = { currentBlock };
+
+			// Get the next block in the bag to replace the held block
+			currentBlock = { GetRandomBlock() };
+
+			// Redraw the game with the new current block
+			currentBlock.Draw();
+
+			// Set a flag indicating the block is held
+			isHoldEmpty = { false };
+			isHoldUsed = { true };
+
+		}
+		else if (!isHoldEmpty)
+		{
+			// Swap the held block with the current block
+			std::swap(heldBlock, currentBlock);
+
+			// Redraw the game with the new current block
+			currentBlock.Draw();
+			isHoldUsed = { true };
+		}
 	}
-	
-	// Remove the current block from screen and
-	// Put the current block into held block
-	heldBlock = { currentBlock };
-
-	// Set a flag indicating the block is held
-	isBlockHeld = { true };
-
-	// Get the next block in the bag to replace the held block
-	currentBlock = { GetRandomBlock() };
-
-	// Redraw the game with the new current block
-	currentBlock.Draw();
-}
-
-void Game::ReleaseHeldBlock()
-{
-	// Move the current block back to its initial position
-	switch (currentBlock.id)
-	{
-	case 1:
-		currentBlock.ResetPosition(-1, 3);
-		break;
-	case 2:
-		currentBlock.ResetPosition(0, 4);
-		break;
-	default:
-		currentBlock.ResetPosition(0, 3);
-		break;
-	}
-
-	// Remove the current block from the screen
-	// Swap the held block with the current block
-	std::swap(heldBlock, currentBlock);
-
-	// Redraw the game with the new current block
-	currentBlock.Draw();
 }
 
 bool Game::IsBlockOutsideRight()
@@ -231,6 +216,7 @@ void Game::LockBlock()
 		grid.grid[item.row][item.column] = currentBlock.id;
 	currentBlock = nextBlock;
 	nextBlock = GetRandomBlock();
+	isHoldUsed = { false };
 }
 
 bool Game::DoesBlockFit()
