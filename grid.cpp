@@ -6,7 +6,7 @@
 
 Grid::Grid() // Constructor
 {
-	numRows = { 20 };
+	numRows = { 22 };
 	numColumns = { 10 };
 	cellSize = { 30 };
 

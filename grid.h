@@ -12,7 +12,7 @@ public:
 	void Draw();
 	bool IsCellOutside(int row, int column);
 	bool IsCellEmpty(int row, int column);
-	int grid[20][10] { 0 }; // array of 20 rows and 10 columns
+	int grid[22][10] { 0 }; // array of 20 rows and 10 columns
 
 private:
 	int numRows{};					// height of game grid 
