@@ -5,11 +5,11 @@
 
 Game::Game()
 {
-	grid = { Grid() };
-	blockBag = RandomizeBag();
+	grid.Initialize();
+	RandomizeBag();
 	currentBlock = GetRandomBlock();
-	isHoldEmpty = { true };
-	isHoldUsed = { false };
+	isHoldEmpty = true;
+	isHoldUsed = false;
 }
 
 void Game::Draw() // Draws the object in the game screen
@@ -51,8 +51,8 @@ void Game::HandleInput()
 }
 
 
-// Block Queue Methods
-std::vector<Block> Game::RandomizeBag()
+// Block Queue Methods 
+void Game::RandomizeBag()
 {
 	blockBag = { IBlock(), OBlock(), SBlock(), ZBlock(), LBlock(), JBlock(), TBlock() };
 
@@ -62,13 +62,12 @@ std::vector<Block> Game::RandomizeBag()
 
 	// Shuffle the grouping of blocks
 	std::shuffle(blockBag.begin(), blockBag.end(), rng);
-
-	return blockBag;
 }
+
 Block Game::GetRandomBlock()
 {
 	if (blockBag.empty())
-		blockBag = RandomizeBag();
+		RandomizeBag();
 
 	currentBlock = blockBag[0]; // Gets the first element of the random block
 	blockBag.erase(blockBag.begin());
@@ -189,6 +188,7 @@ void Game::LockBlock()
 	currentBlock = nextBlock;
 	nextBlock = GetRandomBlock();
 	isHoldUsed = { false };
+	grid.ClearFullRows();
 }
 
 
@@ -227,4 +227,16 @@ bool Game::DoesBlockFit()
 			return false;
 	}
 	return true;
+}
+
+void Game::Reset()
+{
+	grid.Initialize();
+
+	blockBag.clear();
+	RandomizeBag();
+
+	currentBlock = GetRandomBlock();
+	isHoldEmpty = true;
+	isHoldUsed = false;
 }

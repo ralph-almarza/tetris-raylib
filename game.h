@@ -6,7 +6,7 @@ class Game
 {
 public:
 	Game();
-	std::vector<Block> RandomizeBag();
+	void RandomizeBag();
 	Block GetRandomBlock();
 	void Draw();
 
@@ -27,6 +27,7 @@ private:
 	bool IsBlockInsideLeft();
 	void LockBlock();
 	bool DoesBlockFit();
+	void Reset();
 
 	std::vector<Block> blockBag{};
 	Block currentBlock{};
@@ -35,4 +36,6 @@ private:
 	Block nextBlock{};
 
 	bool isHoldUsed;
+
+	std::vector<Block> blocks;
 };
