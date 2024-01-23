@@ -12,30 +12,6 @@ Game::Game()
 	isHoldUsed = { false };
 }
 
-std::vector<Block> Game::RandomizeBag()
-{
-	blockBag = { IBlock(), OBlock(), SBlock(), ZBlock(), LBlock(), JBlock(), TBlock() };
-
-	// Seed the random number generator
-	std::random_device rd;
-	std::mt19937 rng(rd());
-
-	// Shuffle the grouping of blocks
-	std::shuffle(blockBag.begin(), blockBag.end(), rng);
-	
-	return blockBag;
-}
-Block Game::GetRandomBlock()
-{
-	if(blockBag.empty())
-		blockBag = RandomizeBag();
-
-	currentBlock = blockBag[0]; // Gets the first element of the random block
-	blockBag.erase(blockBag.begin());
-
-	return currentBlock;
-}
-
 void Game::Draw() // Draws the object in the game screen
 {
 	grid.Draw();
@@ -74,6 +50,35 @@ void Game::HandleInput()
 	}
 }
 
+
+// Block Queue Methods
+std::vector<Block> Game::RandomizeBag()
+{
+	blockBag = { IBlock(), OBlock(), SBlock(), ZBlock(), LBlock(), JBlock(), TBlock() };
+
+	// Seed the random number generator
+	std::random_device rd;
+	std::mt19937 rng(rd());
+
+	// Shuffle the grouping of blocks
+	std::shuffle(blockBag.begin(), blockBag.end(), rng);
+
+	return blockBag;
+}
+Block Game::GetRandomBlock()
+{
+	if (blockBag.empty())
+		blockBag = RandomizeBag();
+
+	currentBlock = blockBag[0]; // Gets the first element of the random block
+	blockBag.erase(blockBag.begin());
+
+	return currentBlock;
+}
+
+
+// Game Controls Methods
+// Movement
 void Game::MoveBlockRight()
 {
 	currentBlock.Move(0, 1);
@@ -95,7 +100,7 @@ void Game::MoveBlockDown()
 		currentBlock.Move(-1, 0);
 	CheckCollisions();
 }
-
+// Rotation
 // For the rotation states, modular arithmetic was used
 void Game::RotateBlockClockwise()
 {
@@ -113,6 +118,7 @@ void Game::Rotate180()
 	CheckCollisions();
 }
 
+// Holding and Locking 
 void Game::HoldBlock()
 {
 	if (!isHoldUsed)
@@ -158,7 +164,18 @@ void Game::HoldBlock()
 		}
 	}
 }
+void Game::LockBlock()
+{
+	std::vector<Position> tiles = currentBlock.GetCellPosition();
+	for (Position item : tiles)
+		grid.grid[item.row][item.column] = currentBlock.id;
+	currentBlock = nextBlock;
+	nextBlock = GetRandomBlock();
+	isHoldUsed = { false };
+}
 
+
+// Collision Detection
 bool Game::IsBlockOutsideRight()
 {
 	std::vector<Position> tiles = currentBlock.GetCellPosition();
@@ -170,7 +187,6 @@ bool Game::IsBlockOutsideRight()
 	return false;
 
 }
-
 bool Game::IsBlockOutsideLeft()
 {
 	std::vector<Position> tiles = currentBlock.GetCellPosition();
@@ -182,7 +198,6 @@ bool Game::IsBlockOutsideLeft()
 	return false;
 
 }
-
 bool Game::IsBlockOutsideDown()
 {
 	std::vector<Position> tiles = currentBlock.GetCellPosition();
@@ -209,22 +224,12 @@ void Game::CheckCollisions()
 		currentBlock.Move(-1, 0);
 }
 
-void Game::LockBlock()
-{
-	std::vector<Position> tiles = currentBlock.GetCellPosition();
-	for (Position item : tiles)
-		grid.grid[item.row][item.column] = currentBlock.id;
-	currentBlock = nextBlock;
-	nextBlock = GetRandomBlock();
-	isHoldUsed = { false };
-}
-
 bool Game::DoesBlockFit()
 {
 	std::vector<Position>tiles = currentBlock.GetCellPosition();
 	for (Position item : tiles)
 	{
-		if (grid.IsCellEmpty(item.row, item.column) == false)
+		if (!grid.IsCellEmpty(item.row, item.column))
 			return false;
 	}
 	return true;
