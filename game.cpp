@@ -78,47 +78,64 @@ Block Game::GetRandomBlock()
 
 
 // Game Controls Methods
-// Movement
+	// Movement
 void Game::MoveBlockRight()
 {
 	currentBlock.Move(0, 1);
-	if (IsBlockOutsideRight())
+	if (!DoesBlockFit())
 		currentBlock.Move(0, -1);
-	CheckCollisions();
 }
 void Game::MoveBlockLeft()
 {
 	currentBlock.Move(0, -1);
-	if (IsBlockOutsideLeft())
+	if (!DoesBlockFit())
 		currentBlock.Move(0, 1);
-	CheckCollisions();
 }
 void Game::MoveBlockDown()
 {
 	currentBlock.Move(1, 0);
-	if (IsBlockOutsideLeft())
+	if (!DoesBlockFit())
 		currentBlock.Move(-1, 0);
-	CheckCollisions();
 }
-// Rotation
-// For the rotation states, modular arithmetic was used
+	// Rotation
+	// For the rotation states, modular arithmetic was used
 void Game::RotateBlockClockwise()
 {
 	currentBlock.rotationState = (currentBlock.rotationState + 1) % 4;
-	CheckCollisions();
+	if (!IsBlockInsideLeft())
+		currentBlock.Move(0, -2);
+	if (!IsBlockInsideRight())
+		currentBlock.Move(0, 2);
+	if (!DoesBlockFit())
+		currentBlock.Move(-2, 0);
 }
 void Game::RotateBlockCounterClockwise()
 {
-	currentBlock.rotationState = (currentBlock.rotationState - 1 + 4) % 4;
-	CheckCollisions();
+	if (currentBlock.rotationState == 0)
+		currentBlock.rotationState = 3;
+	else
+		currentBlock.rotationState--;
+
+	if (!IsBlockInsideLeft())
+		currentBlock.Move(0, -2);
+	if (!IsBlockInsideRight())
+		currentBlock.Move(0, 2);
+	if (!DoesBlockFit())
+		currentBlock.Move(-2, 0);
+
 }
 void Game::Rotate180()
 {
 	currentBlock.rotationState = (currentBlock.rotationState + 2) % 4;
-	CheckCollisions();
+	
+	if (!IsBlockInsideLeft())
+		currentBlock.Move(0, 2);
+	if (!IsBlockInsideRight())
+		currentBlock.Move(0, -2);
+	if (!DoesBlockFit())
+		currentBlock.Move(-1, 0);
 }
-
-// Holding and Locking 
+	// Holding and Locking 
 void Game::HoldBlock()
 {
 	if (!isHoldUsed)
@@ -176,52 +193,29 @@ void Game::LockBlock()
 
 
 // Collision Detection
-bool Game::IsBlockOutsideRight()
-{
-	std::vector<Position> tiles = currentBlock.GetCellPosition();
-	for (Position item : tiles) // Checks for each cell in the block if it's outside
-	{
-		if (grid.IsCellOutside(item.row, item.column) && item.column > 9)
-			return true;
-	}
-	return false;
-
-}
-bool Game::IsBlockOutsideLeft()
+bool Game::IsBlockInsideRight()
 {
 	std::vector<Position> tiles = currentBlock.GetCellPosition();
 	for (Position item : tiles)
 	{
-		if (grid.IsCellOutside(item.row, item.column) && item.column < 0)
-			return true;
+		if (!(grid.IsCellInside(item.row, item.column)) && item.column < 9)
+			return false;
 	}
-	return false;
-
+	return true;
 }
-bool Game::IsBlockOutsideDown()
+bool Game::IsBlockInsideLeft()
 {
 	std::vector<Position> tiles = currentBlock.GetCellPosition();
 	for (Position item : tiles)
 	{
-		if (grid.IsCellOutside(item.row, item.column))
-			return true;
+		if (!(grid.IsCellInside(item.row, item.column)) && item.column > 0)
+			return false;
 	}
-	return false;
+	return true;
 }
 
 void Game::CheckCollisions()
 {
-	if (IsBlockOutsideRight() || !DoesBlockFit())
-		currentBlock.Move(0, -1);
-
-	if (IsBlockOutsideLeft() || !DoesBlockFit())
-		currentBlock.Move(0, 1);
-
-	if (IsBlockOutsideDown())
-		currentBlock.Move(-1, 0);
-
-	if (!DoesBlockFit())
-		currentBlock.Move(-1, 0);
 }
 
 bool Game::DoesBlockFit()

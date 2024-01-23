@@ -23,9 +23,8 @@ public:
 	Grid grid{};
 
 private:
-	bool IsBlockOutsideRight();
-	bool IsBlockOutsideLeft();
-	bool IsBlockOutsideDown();
+	bool IsBlockInsideRight();
+	bool IsBlockInsideLeft();
 	void LockBlock();
 	bool DoesBlockFit();
 

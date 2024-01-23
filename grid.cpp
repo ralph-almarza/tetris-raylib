@@ -38,18 +38,12 @@ void Grid::Draw() // draws the grid in raylib game window
 	}
 }
 
-bool Grid::IsCellOutside(int row, int column)
+bool Grid::IsCellInside(int row, int column)
 {
-	if ((row >= 0 && row < numRows) && (column >= 0 && column < numColumns))
-		return false;
-	else
-		return true; 
+	return (row >= 0 && row < numRows) && (column >= 0 && column < numColumns);
 }
 
 bool Grid::IsCellEmpty(int row, int column)
 {
-	if (grid[row][column] == 0)
-		return true;
-	else
-		return false;
+	return IsCellInside(row, column) && (grid[row][column] == 0);
 }
