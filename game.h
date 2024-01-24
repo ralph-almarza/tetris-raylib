@@ -7,6 +7,7 @@ class Game
 {
 public:
 	Game();
+	void Update();
 	void RandomizeBag();
 	Block GetRandomBlock();
 	void Draw();
@@ -19,13 +20,15 @@ public:
 	void RotateBlockCounterClockwise();
 	void Rotate180();
 	void HoldBlock();
-	void CheckCollisions();
 
 	Grid grid{};
 
 	int BlockDropDistance();
 	void DropBlock();
 	//void DrawGhostBlock(Block currentBlock);
+
+	bool EventTriggered(double interval);
+	void BlockGravity();
 
 private:
 	bool IsBlockInsideRight();
@@ -44,4 +47,6 @@ private:
 
 	int TileDropDistance(Position block);
 	
+	double lastUpdateTime{};
+
 };

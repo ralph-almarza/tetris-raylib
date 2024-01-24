@@ -38,7 +38,7 @@ std::vector<Position> Block::GetCellPosition() // Gets current position of block
 	return movedTiles;
 }
 
-void Block::ResetPosition()
+void Block::ResetPosition() // Occurs when block is held
 {
 	rotationState = 0; // Position resets typically involves resetting rotation
 
@@ -46,15 +46,15 @@ void Block::ResetPosition()
 	switch (id)
 	{
 	case 1:
-		rowOffset = -1;
+		rowOffset = 0;
 		columnOffset = 3;
 		break;
 	case 2:
-		rowOffset = 0;
+		rowOffset = 1;
 		columnOffset = 4;
 		break;
 	default:
-		rowOffset = 0;
+		rowOffset = 1;
 		columnOffset = 3;
 		break;
 	}

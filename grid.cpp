@@ -24,7 +24,6 @@ void Grid::Initialize()
 		}
 	}
 }
-
 void Grid::Print() // outputs the grid in console
 {
 	for (int row{ 0 }; row < numRows; ++row)
@@ -36,7 +35,6 @@ void Grid::Print() // outputs the grid in console
 		std::cout << std::endl;
 	}
 }
-
 void Grid::Draw() // draws the grid in raylib game window
 {
 	for (int row{ 0 }; row < numRows; ++row)
@@ -50,16 +48,31 @@ void Grid::Draw() // draws the grid in raylib game window
 	}
 }
 
+
+// Used for Collision and Boundary Checks
 bool Grid::IsCellInside(int row, int column)
 {
 	return (row >= 0 && row < numRows) && (column >= 0 && column < numColumns);
 }
-
 bool Grid::IsCellEmpty(int row, int column)
 {
 	return IsCellInside(row, column) && (grid[row][column] == 0);
 }
+bool Grid::IsRowFull(int row)
+{
+	for (int column = 0; column < numColumns; column++)
+	{
+		if (grid[row][column] == 0)
+			return false;
+	}
+	return true;
+}
+int Grid::GetRows()
+{
+	return numRows;
+}
 
+// Line Clears
 int Grid::ClearFullRows()
 {
 	int completed = 0;
@@ -77,18 +90,6 @@ int Grid::ClearFullRows()
 	}
 	return completed;
 }
-
-
-bool Grid::IsRowFull(int row)
-{
-	for (int column = 0; column < numColumns; column++)
-	{
-		if (grid[row][column] == 0)
-			return false;
-	}
-	return true;
-}
-
 void Grid::ClearRow(int row)
 {
 	for (int column = 0; column < numColumns; column++)
@@ -96,7 +97,6 @@ void Grid::ClearRow(int row)
 		grid[row][column] = 0;
 	}
 }
-
 void Grid::MoveRowDown(int row, int completed)
 {
 	for (int column = 0; column < numColumns; column++)
@@ -105,4 +105,5 @@ void Grid::MoveRowDown(int row, int completed)
 		grid[row][column] = 0;
 	}
 }
+
 

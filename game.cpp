@@ -10,7 +10,34 @@ Game::Game()
 	currentBlock = GetRandomBlock();
 	isHoldEmpty = true;
 	isHoldUsed = false;
+	lastUpdateTime = 0;
 }
+
+void Game::Update()
+{
+	BlockGravity();
+	Draw();
+}
+
+void Game::BlockGravity()
+{
+	if (EventTriggered(0.2))
+	{
+		MoveBlockDown();
+	}
+}
+
+bool Game::EventTriggered(double interval)
+{
+	double currentTime = GetTime();
+	if (currentTime - lastUpdateTime >= interval)
+	{
+		lastUpdateTime = currentTime;
+		return true;
+	}
+	return false;
+}
+
 
 void Game::Draw() // Draws the object in the game screen
 {
@@ -203,10 +230,6 @@ bool Game::IsBlockInsideLeft()
 	return true;
 }
 
-void Game::CheckCollisions()
-{
-}
-
 bool Game::DoesBlockFit()
 {
 	std::vector<Position>tiles = currentBlock.GetCellPosition();
@@ -244,7 +267,7 @@ int Game::TileDropDistance(Position block)
 
 int Game::BlockDropDistance()
 {
-	int drop = grid.numRows;
+	int drop = grid.GetRows();
 
 	for (Position p : currentBlock.GetCellPosition())
 	{
