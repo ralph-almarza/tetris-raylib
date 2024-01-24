@@ -17,6 +17,11 @@ void Game::Update()
 {
 	BlockGravity();
 	Draw();
+
+	if (!DoesBlockFit())
+	{
+		Reset();
+	}
 }
 
 void Game::BlockGravity()
@@ -201,9 +206,10 @@ void Game::LockBlock()
 	std::vector<Position> tiles = currentBlock.GetCellPosition();
 	for (Position item : tiles)
 		grid.grid[item.row][item.column] = currentBlock.id;
+
 	currentBlock = nextBlock;
 	nextBlock = GetRandomBlock();
-	isHoldUsed = { false };
+	isHoldUsed = false;
 	grid.ClearFullRows();
 }
 
