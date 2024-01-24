@@ -25,6 +25,7 @@ public:
 
 	int BlockDropDistance();
 	void DropBlock();
+	void DrawGhostBlock(Block currentBlock);
 
 private:
 	bool IsBlockInsideRight();

@@ -15,6 +15,7 @@ Game::Game()
 void Game::Draw() // Draws the object in the game screen
 {
 	grid.Draw();
+	DrawGhostBlock(currentBlock);
 	currentBlock.Draw();
 }
 
@@ -257,9 +258,9 @@ int Game::BlockDropDistance()
 {
 	int drop = grid.numRows;
 
-	for (Position block : currentBlock.GetCellPosition())
+	for (Position p : currentBlock.GetCellPosition())
 	{
-		drop = fmin(static_cast<long double>(drop), static_cast<long double>(TileDropDistance(block)));
+		drop = std::min(drop, TileDropDistance(p));
 	}
 	return drop;
 }
@@ -267,4 +268,18 @@ int Game::BlockDropDistance()
 void Game::DropBlock()
 {
 	currentBlock.Move(BlockDropDistance(), 0);
+}
+
+void Game::DrawGhostBlock(Block currentBlock)
+{
+	Block ghost = currentBlock;
+	int dropDistance = BlockDropDistance();
+
+	for (Position p : ghost.GetCellPosition())
+	{
+		ghost.Move(1, 0);
+	}
+
+	ghost.Draw();
+	
 }
