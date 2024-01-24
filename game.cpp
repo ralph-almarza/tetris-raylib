@@ -15,7 +15,7 @@ Game::Game()
 
 void Game::Update()
 {
-	BlockGravity();
+	//BlockGravity();
 	Draw();
 
 	if (!DoesBlockFit())
@@ -47,7 +47,7 @@ bool Game::EventTriggered(double interval)
 void Game::Draw() // Draws the object in the game screen
 {
 	grid.Draw();
-	//DrawGhostBlock(currentBlock);
+	DrawGhostBlock(currentBlock);
 	currentBlock.Draw();
 }
 
@@ -287,18 +287,9 @@ void Game::DropBlock()
 	currentBlock.Move(BlockDropDistance(), 0);
 }
 
-/*
-void Game::DrawGhostBlock(Block currentBlock)
+void Game::DrawGhostBlock(Block& block)
 {
-	Block ghost = currentBlock;
-	int dropDistance = BlockDropDistance();
-
-	for (Position p : ghost.GetCellPosition())
-	{
-		ghost.Move(1, 0);
-	}
-
+	Block ghost = block;
+	ghost.Move(BlockDropDistance(), 0);
 	ghost.Draw();
-	
 }
-*/

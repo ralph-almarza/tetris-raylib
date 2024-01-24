@@ -25,7 +25,7 @@ public:
 
 	int BlockDropDistance();
 	void DropBlock();
-	//void DrawGhostBlock(Block currentBlock);
+	void DrawGhostBlock(Block& currentBlock);
 
 	bool EventTriggered(double interval);
 	void BlockGravity();
