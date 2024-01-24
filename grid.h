@@ -18,7 +18,7 @@ public:
 	int grid[22][10]; // array of 22 rows and 10 columns
 
 
-private:
+public:
 	bool IsRowFull(int row);
 	void ClearRow(int row);
 	void MoveRowDown(int row, int numRows);

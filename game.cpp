@@ -45,6 +45,7 @@ void Game::HandleInput()
 		HoldBlock();
 		break;
 	case KEY_SPACE:
+		DropBlock();
 		LockBlock();
 		break;
 	}
@@ -238,4 +239,32 @@ void Game::Reset()
 	currentBlock = GetRandomBlock();
 	isHoldEmpty = true;
 	isHoldUsed = false;
+}
+
+int Game::TileDropDistance(Position block)
+{
+	int drop{ 0 };
+
+	while (grid.IsCellEmpty(block.row + drop + 1, block.column))
+	{
+		drop++;
+	}
+
+	return drop;
+}
+
+int Game::BlockDropDistance()
+{
+	int drop = grid.numRows;
+
+	for (Position block : currentBlock.GetCellPosition())
+	{
+		drop = fmin(static_cast<long double>(drop), static_cast<long double>(TileDropDistance(block)));
+	}
+	return drop;
+}
+
+void Game::DropBlock()
+{
+	currentBlock.Move(BlockDropDistance(), 0);
 }

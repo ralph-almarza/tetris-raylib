@@ -1,6 +1,7 @@
 #pragma once
 #include "grid.h"
 #include "block-subclass.cpp"
+#include "cmath"
 
 class Game 
 {
@@ -22,6 +23,9 @@ public:
 
 	Grid grid{};
 
+	int BlockDropDistance();
+	void DropBlock();
+
 private:
 	bool IsBlockInsideRight();
 	bool IsBlockInsideLeft();
@@ -36,4 +40,7 @@ private:
 	Block nextBlock{};
 
 	bool isHoldUsed;
+
+	int TileDropDistance(Position block);
+	
 };
