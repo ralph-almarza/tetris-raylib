@@ -38,10 +38,25 @@ std::vector<Position> Block::GetCellPosition() // Gets current position of block
 	return movedTiles;
 }
 
-void Block::ResetPosition(int resetRow, int resetColumn)
+void Block::ResetPosition()
 {
 	rotationState = 0; // Position resets typically involves resetting rotation
 
-	rowOffset = resetRow;
-	columnOffset = resetColumn;
+	// Move the current block back to its initial position
+	switch (id)
+	{
+	case 1:
+		rowOffset = -1;
+		columnOffset = 3;
+		break;
+	case 2:
+		rowOffset = 0;
+		columnOffset = 4;
+		break;
+	default:
+		rowOffset = 0;
+		columnOffset = 3;
+		break;
+	}
+
 }

@@ -11,7 +11,7 @@ public:
 	void Draw();
 	void Move(int row, int column);
 	std::vector<Position> GetCellPosition();
-	void ResetPosition(int resetRow, int resetColumn);
+	void ResetPosition();
 
 	int id{};
 	int rotationState{};

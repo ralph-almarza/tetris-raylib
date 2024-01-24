@@ -140,19 +140,7 @@ void Game::HoldBlock()
 {
 	if (!isHoldUsed)
 	{
-		// Move the current block back to its initial position
-		switch (currentBlock.id)
-		{
-		case 1:
-			currentBlock.ResetPosition(-1, 3);
-			break;
-		case 2:
-			currentBlock.ResetPosition(0, 4);
-			break;
-		default:
-			currentBlock.ResetPosition(0, 3);
-			break;
-		}
+		currentBlock.ResetPosition();
 
 		if (isHoldEmpty)
 		{
