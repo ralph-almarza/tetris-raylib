@@ -1,6 +1,5 @@
 #include <random> // For generating random blocks
 #include <algorithm> // For seeding the RNG
-
 #include "game.h"
 
 Game::Game()
@@ -78,8 +77,10 @@ void Game::HandleInput()
 		HoldBlock();
 		break;
 	case KEY_SPACE:
-		DropBlock();
-		LockBlock();
+		HardDropBlock();
+		break;
+	case KEY_N:
+		SoftDropBlock();
 		break;
 	}
 }
@@ -292,4 +293,15 @@ void Game::DrawGhostBlock(Block& block)
 	Block ghost = block;
 	ghost.Move(BlockDropDistance(), 0);
 	ghost.Draw();
+}
+
+void Game::HardDropBlock()
+{
+	DropBlock();
+	LockBlock();
+}
+
+void Game::SoftDropBlock()
+{
+	DropBlock();
 }

@@ -20,6 +20,8 @@ public:
 	void RotateBlockCounterClockwise();
 	void Rotate180();
 	void HoldBlock();
+	void HardDropBlock();
+	void SoftDropBlock();
 
 	Grid grid{};
 
@@ -48,5 +50,6 @@ private:
 	int TileDropDistance(Position block);
 	
 	double lastUpdateTime{};
+
 
 };
