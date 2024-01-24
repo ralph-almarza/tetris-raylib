@@ -15,7 +15,7 @@ Game::Game()
 void Game::Draw() // Draws the object in the game screen
 {
 	grid.Draw();
-	DrawGhostBlock(currentBlock);
+	//DrawGhostBlock(currentBlock);
 	currentBlock.Draw();
 }
 
@@ -258,6 +258,7 @@ void Game::DropBlock()
 	currentBlock.Move(BlockDropDistance(), 0);
 }
 
+/*
 void Game::DrawGhostBlock(Block currentBlock)
 {
 	Block ghost = currentBlock;
@@ -271,3 +272,4 @@ void Game::DrawGhostBlock(Block currentBlock)
 	ghost.Draw();
 	
 }
+*/

@@ -45,7 +45,7 @@ void Grid::Draw() // draws the grid in raylib game window
 		{
 			int cellValue = { grid[row][column] }; // cell changes color based on cellValue, default value is 0
 			DrawRectangle(column * cellSize + pixelOffset, row * cellSize + pixelOffset,
-				cellSize - pixelOffset, cellSize - pixelOffset, colors[cellValue]);
+				cellSize - pixelOffset, cellSize - pixelOffset, colors[static_cast<unsigned int>(cellValue)]);
 		}
 	}
 }
@@ -93,15 +93,15 @@ void Grid::ClearRow(int row)
 {
 	for (int column = 0; column < numColumns; column++)
 	{
-		grid[row][column] == 0;
+		grid[row][column] = 0;
 	}
 }
 
-void Grid::MoveRowDown(int row, int numRows)
+void Grid::MoveRowDown(int row, int completed)
 {
 	for (int column = 0; column < numColumns; column++)
 	{
-		grid[row + numRows][column] = grid[row][column];
+		grid[row + completed][column] = grid[row][column];
 		grid[row][column] = 0;
 	}
 }

@@ -13,7 +13,7 @@ void Block::Draw()
 	for (const Position& tilePosition : tiles)
 	{
 		DrawRectangle(tilePosition.column * cellSize + pixelOffset, tilePosition.row * cellSize + pixelOffset,
-			cellSize - pixelOffset, cellSize - pixelOffset, colors[id]);
+			cellSize - pixelOffset, cellSize - pixelOffset, colors[static_cast<unsigned int>(id)]);
 	}
 }
 
