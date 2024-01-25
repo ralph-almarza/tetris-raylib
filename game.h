@@ -34,6 +34,8 @@ public:
 
 	void CheckForKicks();
 
+	Block currentBlock{};
+
 private:
 	bool IsBlockInsideRight();
 	bool IsBlockInsideLeft();
@@ -42,7 +44,7 @@ private:
 	void Reset();
 
 	std::vector<Block> blockBag{};
-	Block currentBlock{};
+	//Block currentBlock{};
 	Block heldBlock{};
 	bool isHoldEmpty{};
 	Block nextBlock{};
