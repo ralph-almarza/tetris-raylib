@@ -10,6 +10,7 @@ public:
 	Block();
 	void Draw();
 	void Move(int row, int column);
+	void UndoMove(int row, int column);
 	std::vector<Position> GetCellPosition();
 	void ResetPosition();
 

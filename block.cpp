@@ -23,6 +23,13 @@ void Block::Move(int row, int column) // Used to change the block's position in 
 	columnOffset += column;
 }
 
+
+void Block::UndoMove(int row, int column)
+{
+	rowOffset -= row;
+	columnOffset -= column;
+}
+
 std::vector<Position> Block::GetCellPosition() // Gets current position of block
 {
 	// Denotes how far the block moved from its initial position 

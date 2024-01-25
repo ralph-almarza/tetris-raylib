@@ -21,7 +21,7 @@ void Game::Update()
 
 	if (!DoesBlockFit())
 	{
-		Reset();
+		//Reset();
 	}
 }
 
@@ -141,35 +141,7 @@ void Game::RotateBlockClockwise()
 		currentBlock.Move(0, -2);
 	if (!IsBlockInsideRight())
 		currentBlock.Move(0, 2);
-
-	if (currentBlock.rotationState == 2)
-	{
-		if (!DoesBlockFit())
-		{
-			currentBlock.Move(0, 1);
-			if (!DoesBlockFit())
-			{
-				currentBlock.Move(0, -1);
-				currentBlock.Move(1, 1);
-				if (!DoesBlockFit())
-				{
-					currentBlock.Move(-1, -1);
-					currentBlock.Move(-2, 0);
-					if (!DoesBlockFit())
-					{
-						currentBlock.Move(2, 0);
-						currentBlock.Move(-2, 1);
-					}
-					else
-					{
-						std::cout << "rotation failed";
-						return;
-					}
-				}
-			}
-		}
-	}
-
+	CheckForKicks();
 }
 void Game::RotateBlockCounterClockwise()
 {
@@ -329,8 +301,48 @@ void Game::HardDropBlock()
 	DropBlock();
 	LockBlock();
 }
-
 void Game::SoftDropBlock()
 {
 	DropBlock();
 }
+
+void Game::CheckForKicks()
+{
+	const int kickPositionAttempts = 5;
+
+	if (currentBlock.rotationState == 2)
+	{
+		for (int i = 0; i < kickPositionAttempts; i++)
+		{
+			if (DoesBlockFit())
+			{
+				break;
+			}
+			if (!DoesBlockFit())
+			{
+				switch (i)
+				{
+				case 0:
+					currentBlock.Move(0, 1);
+					break;
+				case 1:
+					currentBlock.UndoMove(0, 1); // undo movement
+					currentBlock.Move(1, 1); // test new position
+					break;
+				case 2:
+					currentBlock.UndoMove(1, 1);
+					currentBlock.Move(-2, 0);
+					break;
+				case 3:
+					currentBlock.UndoMove(-2, 0); 
+					currentBlock.Move(-2, 1);
+					break;
+				case 4:
+					currentBlock.rotationState--;
+					std::cout << "rotation failed." << std::endl;
+				}
+			}
+		}
+	}
+}
+

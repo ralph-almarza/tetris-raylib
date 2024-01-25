@@ -32,6 +32,8 @@ public:
 	bool EventTriggered(double interval);
 	void BlockGravity();
 
+	void CheckForKicks();
+
 private:
 	bool IsBlockInsideRight();
 	bool IsBlockInsideLeft();
