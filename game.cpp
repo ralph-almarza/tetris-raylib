@@ -2,6 +2,8 @@
 #include <algorithm> // For seeding the RNG
 #include "game.h"
 
+#include <iostream>
+
 Game::Game()
 {
 	grid.Initialize();
@@ -139,8 +141,35 @@ void Game::RotateBlockClockwise()
 		currentBlock.Move(0, -2);
 	if (!IsBlockInsideRight())
 		currentBlock.Move(0, 2);
-	if (!DoesBlockFit())
-		currentBlock.Move(-2, 0);
+
+	if (currentBlock.rotationState == 2)
+	{
+		if (!DoesBlockFit())
+		{
+			currentBlock.Move(0, 1);
+			if (!DoesBlockFit())
+			{
+				currentBlock.Move(0, -1);
+				currentBlock.Move(1, 1);
+				if (!DoesBlockFit())
+				{
+					currentBlock.Move(-1, -1);
+					currentBlock.Move(-2, 0);
+					if (!DoesBlockFit())
+					{
+						currentBlock.Move(2, 0);
+						currentBlock.Move(-2, 1);
+					}
+					else
+					{
+						std::cout << "rotation failed";
+						return;
+					}
+				}
+			}
+		}
+	}
+
 }
 void Game::RotateBlockCounterClockwise()
 {
