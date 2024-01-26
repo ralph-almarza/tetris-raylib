@@ -12,16 +12,21 @@ Game::Game()
 	isHoldEmpty = true;
 	isHoldUsed = false;
 	lastUpdateTime = 0;
+
+	arrTime = 0;
+	arrDelay = 0.500;
+	dasTime = 0;
+	dasDelay = 0.5;
 }
 
 void Game::Update()
 {
-	//BlockGravity();
+	BlockGravity();
 	Draw();
 
 	if (!DoesBlockFit())
 	{
-		//Reset();
+		Reset();
 	}
 }
 
@@ -54,6 +59,9 @@ void Game::Draw() // Draws the object in the game screen
 
 void Game::HandleInput()
 {
+	HandleDelayedInput(KEY_LEFT, &Game::MoveBlockLeft);
+	HandleDelayedInput(KEY_RIGHT, &Game::MoveBlockRight);
+
 	int keyPressed = GetKeyPressed();
 	switch (keyPressed)
 	{
@@ -62,9 +70,6 @@ void Game::HandleInput()
 		break;
 	case KEY_LEFT:
 		MoveBlockLeft();
-		break;
-	case KEY_DOWN:
-		MoveBlockDown();
 		break;
 	case KEY_PERIOD:
 		RotateBlockClockwise();
@@ -84,6 +89,24 @@ void Game::HandleInput()
 	case KEY_N:
 		SoftDropBlock();
 		break;
+	}
+}
+
+void Game::HandleDelayedInput(int key, void (Game::*actionFunction)())
+{
+	if (IsKeyDown(key))
+	{
+		arrTime += GetFrameTime();
+		dasTime += GetFrameTime();
+
+		if (arrTime >= arrDelay && dasTime >= dasDelay)
+		{
+			(this->*actionFunction)();
+		}
+	}
+	else if (IsKeyReleased(key))
+	{
+		arrTime = 0;
 	}
 }
 

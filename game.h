@@ -55,5 +55,12 @@ private:
 	
 	double lastUpdateTime{};
 
+	float arrTime;
+	float arrDelay;
+
+	float dasTime;
+	float dasDelay;
+
+	void HandleDelayedInput(int key, void (Game::* actionFunction)());
 
 };
