@@ -6,8 +6,31 @@
 
 Game::Game()
 {
+	Reset();
+}
+
+void Game::Update()
+{
+	//BlockGravity();
+	Draw();
+
+	if (!DoesBlockFit())
+		Reset();
+}
+
+void Game::Draw() // Draws the object in the game screen
+{
+	grid.Draw();
+	DrawGhostBlock(currentBlock);
+	currentBlock.Draw();
+}
+void Game::Reset()
+{
 	grid.Initialize();
+
+	blockBag.clear();
 	RandomizeBag();
+
 	currentBlock = GetRandomBlock();
 	isHoldEmpty = true;
 	isHoldUsed = false;
@@ -19,44 +42,7 @@ Game::Game()
 	dasDelay = 0.5;
 }
 
-void Game::Update()
-{
-	//BlockGravity();
-	Draw();
-
-	if (!DoesBlockFit())
-	{
-		Reset();
-	}
-}
-
-void Game::BlockGravity()
-{
-	if (EventTriggered(0.2))
-	{
-		MoveBlockDown();
-	}
-}
-
-bool Game::EventTriggered(double interval)
-{
-	double currentTime = GetTime();
-	if (currentTime - lastUpdateTime >= interval)
-	{
-		lastUpdateTime = currentTime;
-		return true;
-	}
-	return false;
-}
-
-
-void Game::Draw() // Draws the object in the game screen
-{
-	grid.Draw();
-	DrawGhostBlock(currentBlock);
-	currentBlock.Draw();
-}
-
+// Game Controls Methods
 void Game::HandleInput()
 {
 	HandleDelayedInput(KEY_LEFT, &Game::MoveBlockLeft);
@@ -91,7 +77,6 @@ void Game::HandleInput()
 		break;
 	}
 }
-
 void Game::HandleDelayedInput(int key, void (Game::*actionFunction)())
 {
 	if (IsKeyDown(key))
@@ -100,43 +85,13 @@ void Game::HandleDelayedInput(int key, void (Game::*actionFunction)())
 		dasTime += GetFrameTime();
 
 		if (arrTime >= arrDelay && dasTime >= dasDelay)
-		{
 			(this->*actionFunction)();
-		}
 	}
 	else if (IsKeyReleased(key))
-	{
 		arrTime = 0;
-	}
 }
 
-
-// Block Queue Methods 
-void Game::RandomizeBag()
-{
-	blockBag = { IBlock(), OBlock(), SBlock(), ZBlock(), LBlock(), JBlock(), TBlock() };
-
-	// Seed the random number generator
-	static std::random_device rd;
-	static std::mt19937 rng(rd());
-
-	// Shuffle the grouping of blocks
-	std::shuffle(blockBag.begin(), blockBag.end(), rng);
-}
-Block Game::GetRandomBlock()
-{
-	if (blockBag.empty())
-		RandomizeBag();
-
-	currentBlock = blockBag[0]; // Gets the first element of the random block
-	blockBag.erase(blockBag.begin());
-
-	return currentBlock;
-}
-
-
-// Game Controls Methods
-	// Movement
+// Movement
 void Game::MoveBlock(int rowChange, int colChange)
 {
 	currentBlock.Move(rowChange, colChange);
@@ -156,8 +111,8 @@ void Game::MoveBlockDown()
 	MoveBlock(1, 0);
 }
 
-	// Rotation
-	// For the rotation states, modular arithmetic was used
+// Rotation
+// For the rotation states, modular arithmetic was used
 void Game::RotateBlockClockwise()
 {
 	currentBlock.rotationState = (currentBlock.rotationState + 1) % 4;
@@ -190,7 +145,8 @@ void Game::Rotate180()
 	if (!DoesBlockFit())
 		currentBlock.Move(-1, 0);
 }
-	// Holding and Locking 
+	
+// Holding, Locking and Dropping
 void Game::HoldBlock()
 {
 	if (!isHoldUsed)
@@ -218,94 +174,6 @@ void Game::HoldBlock()
 		}
 	}
 }
-void Game::LockBlock()
-{
-	std::vector<Position> tiles = currentBlock.GetCellPosition();
-	for (Position item : tiles)
-		grid.grid[item.row][item.column] = currentBlock.id;
-
-	currentBlock = GetRandomBlock();
-	isHoldUsed = false;
-	grid.ClearFullRows();
-}
-
-
-// Collision Detection
-bool Game::IsBlockInsideRight()
-{
-	std::vector<Position> tiles = currentBlock.GetCellPosition();
-	for (Position item : tiles)
-	{
-		if (!(grid.IsCellInside(item.row, item.column)) && item.column < 9)
-			return false;
-	}
-	return true;
-}
-bool Game::IsBlockInsideLeft()
-{
-	std::vector<Position> tiles = currentBlock.GetCellPosition();
-	for (Position item : tiles)
-	{
-		if (!(grid.IsCellInside(item.row, item.column)) && item.column > 0)
-			return false;
-	}
-	return true;
-}
-
-bool Game::DoesBlockFit()
-{
-	for (Position item : currentBlock.GetCellPosition())
-	{
-		if (!grid.IsCellEmpty(item.row, item.column))
-			return false;
-	}
-	return true;
-}
-
-void Game::Reset()
-{
-	grid.Initialize();
-
-	blockBag.clear();
-	RandomizeBag();
-
-	currentBlock = GetRandomBlock();
-	isHoldEmpty = true;
-	isHoldUsed = false;
-}
-
-int Game::TileDropDistance(const Position& block)
-{
-	int drop{ 0 };
-
-	while (grid.IsCellEmpty(block.row + drop + 1, block.column))
-		drop++;
-
-	return drop;
-}
-
-int Game::BlockDropDistance()
-{
-	int minDistance = grid.GetRows();
-
-	for (Position p : currentBlock.GetCellPosition())
-		minDistance = std::min(minDistance, TileDropDistance(p));
-
-	return minDistance;
-}
-
-void Game::DropBlock()
-{
-	currentBlock.Move(BlockDropDistance(), 0);
-}
-
-void Game::DrawGhostBlock(const Block& block)
-{
-	Block ghost = block;
-	ghost.Move(BlockDropDistance(), 0);
-	ghost.Draw();
-}
-
 void Game::HardDropBlock()
 {
 	DropBlock();
@@ -315,7 +183,49 @@ void Game::SoftDropBlock()
 {
 	DropBlock();
 }
+void Game::DropBlock()
+{
+	currentBlock.Move(BlockDropDistance(), 0);
+}
+void Game::LockBlock()
+{
+	for (Position item : currentBlock.GetCellPosition())
+		grid.grid[item.row][item.column] = { currentBlock.id };
 
+	currentBlock = GetRandomBlock();
+	isHoldUsed = { false };
+	grid.ClearFullRows();
+}
+
+
+// Collision Detection
+bool Game::IsBlockInsideRight()
+{
+	for (Position item : currentBlock.GetCellPosition())
+	{
+		if (!(grid.IsCellInside(item.row, item.column)) && item.column < 9)
+			return false;
+	}
+	return true;
+}
+bool Game::IsBlockInsideLeft()
+{
+	for (Position item : currentBlock.GetCellPosition())
+	{
+		if (!(grid.IsCellInside(item.row, item.column)) && item.column > 0)
+			return false;
+	}
+	return true;
+}
+bool Game::DoesBlockFit()
+{
+	for (Position item : currentBlock.GetCellPosition())
+	{
+		if (!grid.IsCellEmpty(item.row, item.column))
+			return false;
+	}
+	return true;
+}
 void Game::CheckForKicks()
 {
 	const int kickPositionAttempts = 5;
@@ -356,3 +266,72 @@ void Game::CheckForKicks()
 	}
 }
 
+
+// Ghost Block Logic and Implementation
+void Game::DrawGhostBlock(const Block& block)
+{
+	Block ghost = block;
+	ghost.Move(BlockDropDistance(), 0);
+	ghost.Draw();
+}
+int Game::TileDropDistance(const Position& block)
+{
+	int dropDistance{ 0 };
+
+	while (grid.IsCellEmpty(block.row + dropDistance + 1, block.column))
+		dropDistance++;
+
+	return dropDistance;
+}
+int Game::BlockDropDistance()
+{
+	int minDistance = grid.GetRows();
+
+	for (Position p : currentBlock.GetCellPosition())
+		minDistance = std::min(minDistance, TileDropDistance(p));
+
+	return minDistance;
+}
+
+// Block Queue Methods 
+Block Game::GetRandomBlock()
+{
+	if (blockBag.empty())
+		RandomizeBag();
+
+	currentBlock = blockBag[0]; // Gets the first element of the random block
+	blockBag.erase(blockBag.begin());
+
+	return currentBlock;
+}
+void Game::RandomizeBag()
+{
+	blockBag = { IBlock(), OBlock(), SBlock(), ZBlock(), LBlock(), JBlock(), TBlock() };
+
+	// Seed the random number generator
+	static std::random_device rd;
+	static std::mt19937 rng(rd());
+
+	// Shuffle the grouping of blocks
+	std::shuffle(blockBag.begin(), blockBag.end(), rng);
+}
+
+
+// Gravity Feature
+void Game::BlockGravity()
+{
+	if (EventTriggered(0.2))
+	{
+		MoveBlockDown();
+	}
+}
+bool Game::EventTriggered(double interval)
+{
+	double currentTime = GetTime();
+	if (currentTime - lastUpdateTime >= interval)
+	{
+		lastUpdateTime = currentTime;
+		return true;
+	}
+	return false;
+}

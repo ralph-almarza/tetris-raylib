@@ -8,61 +8,61 @@ class Game
 public:
 	Game();
 	void Update();
-	void RandomizeBag();
-	Block GetRandomBlock();
 	void Draw();
-
 	void HandleInput();
 
+	Grid grid{};
+
+private:
+	// Game Controls Methods
+	void HandleDelayedInput(int key, void (Game::* actionFunction)());
 	void MoveBlock(int rowChange, int colChange);
 	void MoveBlockRight();
 	void MoveBlockLeft();
 	void MoveBlockDown();
-
 	void RotateBlockClockwise();
 	void RotateBlockCounterClockwise();
 	void Rotate180();
 	void HoldBlock();
 	void HardDropBlock();
 	void SoftDropBlock();
-
-	Grid grid{};
-
-	int BlockDropDistance();
+	void LockBlock();
 	void DropBlock();
-	void DrawGhostBlock(const Block& currentBlock);
 
-	bool EventTriggered(double interval);
+	// Block Queue Methods
+	void RandomizeBag();
+	Block GetRandomBlock();
+
+	// Ghost Block Methods
+	void DrawGhostBlock(const Block& block);
+	int TileDropDistance(const Position& block);
+	int BlockDropDistance();
+
+	// Gravity Methods
 	void BlockGravity();
+	bool EventTriggered(double interval);
 
+	// Collision Methods
 	void CheckForKicks();
-
-	Block currentBlock{};
-
-private:
 	bool IsBlockInsideRight();
 	bool IsBlockInsideLeft();
-	void LockBlock();
 	bool DoesBlockFit();
+	
+	// Reset Game
 	void Reset();
 
-	std::vector<Block> blockBag{};
-	//Block currentBlock{};
+	// Variables
+	Block currentBlock{};
 	Block heldBlock{};
+	std::vector<Block> blockBag{};
+
 	bool isHoldEmpty{};
+	bool isHoldUsed{};
 
-	bool isHoldUsed;
+	float arrTime{};
+	float arrDelay{};
+	float dasTime{};
+	float dasDelay{};
 
-	int TileDropDistance(const Position& block);
-	
 	double lastUpdateTime{};
-
-	float arrTime;
-	float arrDelay;
-
-	float dasTime;
-	float dasDelay;
-
-	void HandleDelayedInput(int key, void (Game::* actionFunction)());
-
 };
