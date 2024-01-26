@@ -21,7 +21,7 @@ Game::Game()
 
 void Game::Update()
 {
-	BlockGravity();
+	//BlockGravity();
 	Draw();
 
 	if (!DoesBlockFit())
@@ -117,8 +117,8 @@ void Game::RandomizeBag()
 	blockBag = { IBlock(), OBlock(), SBlock(), ZBlock(), LBlock(), JBlock(), TBlock() };
 
 	// Seed the random number generator
-	std::random_device rd;
-	std::mt19937 rng(rd());
+	static std::random_device rd;
+	static std::mt19937 rng(rd());
 
 	// Shuffle the grouping of blocks
 	std::shuffle(blockBag.begin(), blockBag.end(), rng);
@@ -137,24 +137,25 @@ Block Game::GetRandomBlock()
 
 // Game Controls Methods
 	// Movement
+void Game::MoveBlock(int rowChange, int colChange)
+{
+	currentBlock.Move(rowChange, colChange);
+	if (!DoesBlockFit())
+		currentBlock.Move(-rowChange, -colChange);
+}
 void Game::MoveBlockRight()
 {
-	currentBlock.Move(0, 1);
-	if (!DoesBlockFit())
-		currentBlock.Move(0, -1);
+	MoveBlock(0, 1);
 }
 void Game::MoveBlockLeft()
 {
-	currentBlock.Move(0, -1);
-	if (!DoesBlockFit())
-		currentBlock.Move(0, 1);
+	MoveBlock(0, -1);
 }
 void Game::MoveBlockDown()
 {
-	currentBlock.Move(1, 0);
-	if (!DoesBlockFit())
-		currentBlock.Move(-1, 0);
+	MoveBlock(1, 0);
 }
+
 	// Rotation
 	// For the rotation states, modular arithmetic was used
 void Game::RotateBlockClockwise()
@@ -168,10 +169,7 @@ void Game::RotateBlockClockwise()
 }
 void Game::RotateBlockCounterClockwise()
 {
-	if (currentBlock.rotationState == 0)
-		currentBlock.rotationState = 3;
-	else
-		currentBlock.rotationState--;
+	currentBlock.rotationState = (currentBlock.rotationState + 3) % 4;
 
 	if (!IsBlockInsideLeft())
 		currentBlock.Move(0, -2);
@@ -207,10 +205,6 @@ void Game::HoldBlock()
 			// Get the next block in the bag to replace the held block
 			currentBlock = { GetRandomBlock() };
 
-			// Redraw the game with the new current block
-			currentBlock.Draw();
-
-			// Set a flag indicating the block is held
 			isHoldEmpty = { false };
 			isHoldUsed = { true };
 
@@ -220,8 +214,6 @@ void Game::HoldBlock()
 			// Swap the held block with the current block
 			std::swap(heldBlock, currentBlock);
 
-			// Redraw the game with the new current block
-			currentBlock.Draw();
 			isHoldUsed = { true };
 		}
 	}
@@ -232,8 +224,7 @@ void Game::LockBlock()
 	for (Position item : tiles)
 		grid.grid[item.row][item.column] = currentBlock.id;
 
-	currentBlock = nextBlock;
-	nextBlock = GetRandomBlock();
+	currentBlock = GetRandomBlock();
 	isHoldUsed = false;
 	grid.ClearFullRows();
 }

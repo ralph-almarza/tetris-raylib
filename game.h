@@ -13,9 +13,12 @@ public:
 	void Draw();
 
 	void HandleInput();
+
+	void MoveBlock(int rowChange, int colChange);
 	void MoveBlockRight();
 	void MoveBlockLeft();
 	void MoveBlockDown();
+
 	void RotateBlockClockwise();
 	void RotateBlockCounterClockwise();
 	void Rotate180();
@@ -47,7 +50,6 @@ private:
 	//Block currentBlock{};
 	Block heldBlock{};
 	bool isHoldEmpty{};
-	Block nextBlock{};
 
 	bool isHoldUsed;
 
