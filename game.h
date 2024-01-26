@@ -30,7 +30,7 @@ public:
 
 	int BlockDropDistance();
 	void DropBlock();
-	void DrawGhostBlock(Block& currentBlock);
+	void DrawGhostBlock(const Block& currentBlock);
 
 	bool EventTriggered(double interval);
 	void BlockGravity();
@@ -53,7 +53,7 @@ private:
 
 	bool isHoldUsed;
 
-	int TileDropDistance(Position block);
+	int TileDropDistance(const Position& block);
 	
 	double lastUpdateTime{};
 

@@ -254,8 +254,7 @@ bool Game::IsBlockInsideLeft()
 
 bool Game::DoesBlockFit()
 {
-	std::vector<Position>tiles = currentBlock.GetCellPosition();
-	for (Position item : tiles)
+	for (Position item : currentBlock.GetCellPosition())
 	{
 		if (!grid.IsCellEmpty(item.row, item.column))
 			return false;
@@ -275,27 +274,24 @@ void Game::Reset()
 	isHoldUsed = false;
 }
 
-int Game::TileDropDistance(Position block)
+int Game::TileDropDistance(const Position& block)
 {
 	int drop{ 0 };
 
 	while (grid.IsCellEmpty(block.row + drop + 1, block.column))
-	{
 		drop++;
-	}
 
 	return drop;
 }
 
 int Game::BlockDropDistance()
 {
-	int drop = grid.GetRows();
+	int minDistance = grid.GetRows();
 
 	for (Position p : currentBlock.GetCellPosition())
-	{
-		drop = std::min(drop, TileDropDistance(p));
-	}
-	return drop;
+		minDistance = std::min(minDistance, TileDropDistance(p));
+
+	return minDistance;
 }
 
 void Game::DropBlock()
@@ -303,7 +299,7 @@ void Game::DropBlock()
 	currentBlock.Move(BlockDropDistance(), 0);
 }
 
-void Game::DrawGhostBlock(Block& block)
+void Game::DrawGhostBlock(const Block& block)
 {
 	Block ghost = block;
 	ghost.Move(BlockDropDistance(), 0);
