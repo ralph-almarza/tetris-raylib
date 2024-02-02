@@ -9,7 +9,7 @@ Grid::Grid() // Constructor
 	Initialize();
 	numRows = { 22 };
 	numColumns = { 10 };
-	cellSize = { 30 };
+	cellSize = { 65 };
 
 	colors = GetCellColors();
 }

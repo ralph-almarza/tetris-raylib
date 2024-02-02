@@ -1,18 +1,18 @@
 #include "block.h"
 #include "position.h"
-// Do this later: update the positions of the blocks to be 1 unit up from the screen
-// Only implement this after the blocks start moving 
+
+// Updated I and O blocks
+
 class IBlock : public Block
 {
 public: 
 	IBlock()
 	{
 		id = { 1 };
-		cells[0] = { Position(1, 0), Position(1, 1), Position(1, 2), Position(1, 3) };
-		cells[1] = { Position(0, 2), Position(1, 2), Position(2, 2), Position(3, 2) };
+		cells[0] = { Position(2, 1), Position(2, 2), Position(2, 3), Position(2, 4) };
+		cells[1] = { Position(1, 2), Position(2, 2), Position(3, 2), Position(4, 2) };
 		cells[2] = { Position(2, 0), Position(2, 1), Position(2, 2), Position(2, 3) };
-		cells[3] = { Position(0, 1), Position(1, 1), Position(2, 1), Position(3, 1) };
-		Move(1, 3); // Puts the block in the center of screen
+		cells[3] = { Position(0, 2), Position(1, 2), Position(2, 2), Position(3, 2) };
 	}
 };
 
@@ -22,11 +22,10 @@ public:
 	OBlock()
 	{
 		id = { 2 };
-		cells[0] = { Position(0, 0), Position(0, 1), Position(1, 0), Position(1, 1) };
-		cells[1] = { Position(0, 0), Position(0, 1), Position(1, 0), Position(1, 1) };
-		cells[2] = { Position(0, 0), Position(0, 1), Position(1, 0), Position(1, 1) };
+		cells[0] = { Position(0, 1), Position(0, 2), Position(1, 1), Position(1, 2) };
+		cells[1] = { Position(1, 1), Position(1, 2), Position(2, 1), Position(2, 2) };
+		cells[2] = { Position(1, 0), Position(1, 1), Position(2, 0), Position(2, 1) };
 		cells[3] = { Position(0, 0), Position(0, 1), Position(1, 0), Position(1, 1) };
-		Move(1, 4);
 	}
 };
 
@@ -40,7 +39,6 @@ public:
 		cells[1] = { Position(0, 1), Position(1, 1), Position(1, 2), Position(2, 2) };
 		cells[2] = { Position(1, 1), Position(1, 2), Position(2, 0), Position(2, 1) };
 		cells[3] = { Position(0, 0), Position(1, 0), Position(1, 1), Position(2, 1) };
-		Move(1, 3);
 	}
 };
 
@@ -54,7 +52,6 @@ public:
 		cells[1] = { Position(0, 2), Position(1, 1), Position(1, 2), Position(2, 1) };
 		cells[2] = { Position(1, 0), Position(1, 1), Position(2, 1), Position(2, 2) };
 		cells[3] = { Position(0, 1), Position(1, 0), Position(1, 1), Position(2, 0) };
-		Move(1, 3);
 	}
 };
 
@@ -68,7 +65,6 @@ public:
 		cells[1] = { Position(0, 1), Position(1, 1), Position(2, 1), Position(2, 2) };
 		cells[2] = { Position(1, 0), Position(1, 1), Position(1, 2), Position(2, 0) };
 		cells[3] = { Position(0, 0), Position(0, 1), Position(1, 1), Position(2, 1) };
-		Move(1, 3);
 	}
 };
 
@@ -82,7 +78,6 @@ public:
 		cells[1] = { Position(0, 1), Position(0, 2), Position(1, 1), Position(2, 1) };
 		cells[2] = { Position(1, 0), Position(1, 1), Position(1, 2), Position(2, 2) };
 		cells[3] = { Position(0, 1), Position(1, 1), Position(2, 0), Position(2, 1) };
-		Move(1, 3);
 	}
 };
 
@@ -96,7 +91,6 @@ public:
 		cells[1] = { Position(0, 1), Position(1, 1), Position(1, 2), Position(2, 1) };
 		cells[2] = { Position(1, 0), Position(1, 1), Position(1, 2), Position(2, 1) };
 		cells[3] = { Position(0, 1), Position(1, 0), Position(1, 1), Position(2, 1) };
-		Move(1, 3);
 	}
 };
 

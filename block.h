@@ -22,7 +22,7 @@ public:
 private:
 	int cellSize{}; 
 	std::vector<Color> colors{};
-	int pixelOffset{ 1 };
+	int pixelOffset{};
 
 	int rowOffset{};
 	int columnOffset{};

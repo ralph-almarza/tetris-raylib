@@ -2,9 +2,11 @@
 
 Block::Block()
 {
-	cellSize = { 30 };
-	rotationState = { 0 }; 
+	cellSize = { 65 };
+	pixelOffset = { 1 };
 	colors = { GetCellColors() };
+
+	rotationState = { 0 }; 
 }
 
 void Block::Draw()
@@ -22,7 +24,6 @@ void Block::Move(int row, int column) // Used to change the block's position in 
 	rowOffset += row;
 	columnOffset += column;
 }
-
 
 void Block::UndoMove(int row, int column)
 {
@@ -54,11 +55,7 @@ void Block::ResetPosition() // Occurs when block is held
 	{
 	case 1:
 		rowOffset = 0;
-		columnOffset = 3;
-		break;
-	case 2:
-		rowOffset = 1;
-		columnOffset = 4;
+		columnOffset = 2;
 		break;
 	default:
 		rowOffset = 1;

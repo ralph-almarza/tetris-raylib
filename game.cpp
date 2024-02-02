@@ -4,6 +4,8 @@
 
 #include <iostream>
 
+#include <utility>
+
 Game::Game()
 {
 	Reset();
@@ -11,6 +13,7 @@ Game::Game()
 
 void Game::Update()
 {
+
 	//BlockGravity();
 	Draw();
 
@@ -32,6 +35,7 @@ void Game::Reset()
 	RandomizeBag();
 
 	currentBlock = GetRandomBlock();
+	currentBlock.ResetPosition();
 	isHoldEmpty = true;
 	isHoldUsed = false;
 	lastUpdateTime = 0;
@@ -40,6 +44,7 @@ void Game::Reset()
 	arrDelay = 0.500;
 	dasTime = 0;
 	dasDelay = 0.5;
+	
 }
 
 // Game Controls Methods
@@ -111,41 +116,76 @@ void Game::MoveBlockDown()
 	MoveBlock(1, 0);
 }
 
+
+std::vector<std::pair<int, int>> Table()
+{
+	std::vector<std::pair<int, int>> offsetO
+		= { {0,0},
+			{-1,0},
+			{-1,1},
+			{0,1} };
+
+	return offsetO;
+}
+
+std::pair<int,int> ComputeResultantCoordinate(std::pair<int, int> initial, std::pair<int, int> final)
+{
+	std::pair<int, int> resultant = { final.first - initial.first, final.second - initial.second };
+
+	return resultant;
+}
+
 // Rotation
 // For the rotation states, modular arithmetic was used
 void Game::RotateBlockClockwise()
 {
+	int initRotationState = currentBlock.rotationState;
 	currentBlock.rotationState = (currentBlock.rotationState + 1) % 4;
-	if (!IsBlockInsideLeft())
-		currentBlock.Move(0, -2);
-	if (!IsBlockInsideRight())
-		currentBlock.Move(0, 2);
-	CheckForKicks();
+
+	std::vector<std::pair<int, int>> table = Table();
+	std::pair<int, int> moveCoordinate = ComputeResultantCoordinate(
+		table[static_cast<size_t>(initRotationState)], 
+		table[static_cast<size_t>(currentBlock.rotationState)]);
+
+	if (currentBlock.id == 2)
+	{
+		currentBlock.Move(moveCoordinate.first, moveCoordinate.second);
+	}
+
 }
 void Game::RotateBlockCounterClockwise()
 {
+	int initRotationState = currentBlock.rotationState;
 	currentBlock.rotationState = (currentBlock.rotationState + 3) % 4;
 
-	if (!IsBlockInsideLeft())
-		currentBlock.Move(0, -2);
-	if (!IsBlockInsideRight())
-		currentBlock.Move(0, 2);
-	if (!DoesBlockFit())
-		currentBlock.Move(-2, 0);
+	std::vector<std::pair<int, int>> table = Table();
+	std::pair<int, int> moveCoordinate = ComputeResultantCoordinate(
+		table[static_cast<size_t>(initRotationState)],
+		table[static_cast<size_t>(currentBlock.rotationState)]);
 
+	if (currentBlock.id == 2)
+	{
+		currentBlock.Move(moveCoordinate.first, moveCoordinate.second);
+	}
 }
 void Game::Rotate180()
 {
+	int initRotationState = currentBlock.rotationState;
 	currentBlock.rotationState = (currentBlock.rotationState + 2) % 4;
-	
-	if (!IsBlockInsideLeft())
-		currentBlock.Move(0, 2);
-	if (!IsBlockInsideRight())
-		currentBlock.Move(0, -2);
-	if (!DoesBlockFit())
-		currentBlock.Move(-1, 0);
+
+	std::vector<std::pair<int, int>> table = Table();
+	std::pair<int, int> moveCoordinate = ComputeResultantCoordinate(
+		table[static_cast<size_t>(initRotationState)],
+		table[static_cast<size_t>(currentBlock.rotationState)]);
+
+	if (currentBlock.id == 2)
+	{
+		currentBlock.Move(moveCoordinate.first, moveCoordinate.second);
+	}
 }
-	
+
+
+
 // Holding, Locking and Dropping
 void Game::HoldBlock()
 {
@@ -193,30 +233,13 @@ void Game::LockBlock()
 		grid.grid[item.row][item.column] = { currentBlock.id };
 
 	currentBlock = GetRandomBlock();
+	currentBlock.ResetPosition();
 	isHoldUsed = { false };
 	grid.ClearFullRows();
 }
 
 
 // Collision Detection
-bool Game::IsBlockInsideRight()
-{
-	for (Position item : currentBlock.GetCellPosition())
-	{
-		if (!(grid.IsCellInside(item.row, item.column)) && item.column < 9)
-			return false;
-	}
-	return true;
-}
-bool Game::IsBlockInsideLeft()
-{
-	for (Position item : currentBlock.GetCellPosition())
-	{
-		if (!(grid.IsCellInside(item.row, item.column)) && item.column > 0)
-			return false;
-	}
-	return true;
-}
 bool Game::DoesBlockFit()
 {
 	for (Position item : currentBlock.GetCellPosition())
@@ -226,45 +249,7 @@ bool Game::DoesBlockFit()
 	}
 	return true;
 }
-void Game::CheckForKicks()
-{
-	const int kickPositionAttempts = 5;
 
-	if (currentBlock.rotationState == 2)
-	{
-		for (int i = 0; i < kickPositionAttempts; i++)
-		{
-			if (DoesBlockFit())
-			{
-				break;
-			}
-			if (!DoesBlockFit())
-			{
-				switch (i)
-				{
-				case 0:
-					currentBlock.Move(0, 1);
-					break;
-				case 1:
-					currentBlock.UndoMove(0, 1); // undo movement
-					currentBlock.Move(1, 1); // test new position
-					break;
-				case 2:
-					currentBlock.UndoMove(1, 1);
-					currentBlock.Move(-2, 0);
-					break;
-				case 3:
-					currentBlock.UndoMove(-2, 0); 
-					currentBlock.Move(-2, 1);
-					break;
-				case 4:
-					currentBlock.rotationState--;
-					std::cout << "rotation failed." << std::endl;
-				}
-			}
-		}
-	}
-}
 
 
 // Ghost Block Logic and Implementation
