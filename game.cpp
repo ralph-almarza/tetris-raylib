@@ -117,15 +117,27 @@ void Game::MoveBlockDown()
 }
 
 
-std::vector<std::pair<int, int>> Table()
+std::vector<std::vector<std::pair<int, int>>> Table() // this is now correct
 {
-	std::vector<std::pair<int, int>> offsetO
-		= { {0,0},
-			{-1,0},
-			{-1,1},
-			{0,1} };
+	std::vector<std::vector<std::pair<int, int>>> offsetLSJZT
+		= { {{0,0}, {0,0},  {0,0},   {0,0}, {0,0}},
+			{{0,0}, {0,-1}, {-1,-1}, {2,0}, {2,-1}},
+			{{0,0}, {0,0},  {0,0},   {0,0}, {0,0}},
+			{{0,0}, {0,1},  {-1,1},  {2,0}, {2,1}}};
 
-	return offsetO;
+	std::vector<std::vector<std::pair<int, int>>> offsetI
+		= { {{0,0}, {0,1},  {0,-2}, {0,1},  {0,-2}},
+			{{0,1}, {0,0},  {0,0},  {1,0},  {-2,0}},
+			{{1,1}, {1,-1}, {1,2},  {0,-1}, {0,2}},
+			{{1,0}, {1,0},  {1,0},  {-1,0}, {2,0}}};
+
+	std::vector < std::vector<std::pair<int, int >>> offsetO
+		= {{ {0, 0},
+			 {-1,0},
+			 {-1,1},
+			 {0, 1} }};
+
+	return offsetI;
 }
 
 std::pair<int,int> ComputeResultantCoordinate(std::pair<int, int> initial, std::pair<int, int> final)
@@ -135,6 +147,13 @@ std::pair<int,int> ComputeResultantCoordinate(std::pair<int, int> initial, std::
 	return resultant;
 }
 
+std::pair<int, int> GetMoveCoordinate(int initRotate, int finalRotate)
+{
+	std::vector<std::vector<std::pair<int, int>>> table = Table();
+	
+	return ComputeResultantCoordinate(table[static_cast<size_t>(initRotate)][0], table[static_cast<size_t>(finalRotate)][0]);
+}
+
 // Rotation
 // For the rotation states, modular arithmetic was used
 void Game::RotateBlockClockwise()
@@ -142,12 +161,9 @@ void Game::RotateBlockClockwise()
 	int initRotationState = currentBlock.rotationState;
 	currentBlock.rotationState = (currentBlock.rotationState + 1) % 4;
 
-	std::vector<std::pair<int, int>> table = Table();
-	std::pair<int, int> moveCoordinate = ComputeResultantCoordinate(
-		table[static_cast<size_t>(initRotationState)], 
-		table[static_cast<size_t>(currentBlock.rotationState)]);
+	std::pair<int, int> moveCoordinate = GetMoveCoordinate(initRotationState, currentBlock.rotationState);
 
-	if (currentBlock.id == 2)
+	if (currentBlock.id == 1)
 	{
 		currentBlock.Move(moveCoordinate.first, moveCoordinate.second);
 	}
@@ -155,33 +171,11 @@ void Game::RotateBlockClockwise()
 }
 void Game::RotateBlockCounterClockwise()
 {
-	int initRotationState = currentBlock.rotationState;
 	currentBlock.rotationState = (currentBlock.rotationState + 3) % 4;
-
-	std::vector<std::pair<int, int>> table = Table();
-	std::pair<int, int> moveCoordinate = ComputeResultantCoordinate(
-		table[static_cast<size_t>(initRotationState)],
-		table[static_cast<size_t>(currentBlock.rotationState)]);
-
-	if (currentBlock.id == 2)
-	{
-		currentBlock.Move(moveCoordinate.first, moveCoordinate.second);
-	}
 }
 void Game::Rotate180()
 {
-	int initRotationState = currentBlock.rotationState;
 	currentBlock.rotationState = (currentBlock.rotationState + 2) % 4;
-
-	std::vector<std::pair<int, int>> table = Table();
-	std::pair<int, int> moveCoordinate = ComputeResultantCoordinate(
-		table[static_cast<size_t>(initRotationState)],
-		table[static_cast<size_t>(currentBlock.rotationState)]);
-
-	if (currentBlock.id == 2)
-	{
-		currentBlock.Move(moveCoordinate.first, moveCoordinate.second);
-	}
 }
 
 
