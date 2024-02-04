@@ -17,8 +17,8 @@ void Game::Update()
 	//BlockGravity();
 	Draw();
 
-	if (!DoesBlockFit())
-		Reset();
+	//if (!DoesBlockFit())
+		//Reset();
 }
 
 void Game::Draw() // Draws the object in the game screen
@@ -36,6 +36,7 @@ void Game::Reset()
 
 	currentBlock = GetRandomBlock();
 	currentBlock.ResetPosition();
+	
 	isHoldEmpty = true;
 	isHoldUsed = false;
 	lastUpdateTime = 0;
@@ -117,41 +118,40 @@ void Game::MoveBlockDown()
 }
 
 
-std::vector<std::vector<std::pair<int, int>>> Table() // this is now correct
+Position Game::ComputeResultantCoordinate(Position initial, Position final)
 {
-	std::vector<std::vector<std::pair<int, int>>> offsetLSJZT
-		= { {{0,0}, {0,0},  {0,0},   {0,0}, {0,0}},
-			{{0,0}, {0,-1}, {-1,-1}, {2,0}, {2,-1}},
-			{{0,0}, {0,0},  {0,0},   {0,0}, {0,0}},
-			{{0,0}, {0,1},  {-1,1},  {2,0}, {2,1}}};
-
-	std::vector<std::vector<std::pair<int, int>>> offsetI
-		= { {{0,0}, {0,1},  {0,-2}, {0,1},  {0,-2}},
-			{{0,1}, {0,0},  {0,0},  {1,0},  {-2,0}},
-			{{1,1}, {1,-1}, {1,2},  {0,-1}, {0,2}},
-			{{1,0}, {1,0},  {1,0},  {-1,0}, {2,0}}};
-
-	std::vector < std::vector<std::pair<int, int >>> offsetO
-		= {{ {0, 0},
-			 {-1,0},
-			 {-1,1},
-			 {0, 1} }};
-
-	return offsetI;
+	return { final.row - initial.row, final.column - initial.column};
 }
 
-std::pair<int,int> ComputeResultantCoordinate(std::pair<int, int> initial, std::pair<int, int> final)
+Position Game::GetMoveCoordinate(int initRot, int finalRot)
 {
-	std::pair<int, int> resultant = { final.first - initial.first, final.second - initial.second };
+	Position coordinate{ 0,0 };
 
-	return resultant;
-}
+	for (unsigned int i = 0; i < currentBlock.offsets[initRot].size(); ++i)
+	{
+		coordinate = ComputeResultantCoordinate(currentBlock.offsets[initRot][i], currentBlock.offsets[finalRot][i]);
+		currentBlock.Move(coordinate.row, coordinate.column);
 
-std::pair<int, int> GetMoveCoordinate(int initRotate, int finalRotate)
+		if (DoesBlockFit())
+		{
+			std::cout << "break!";
+			break;
+		}
+		else if (!DoesBlockFit())
+		{
+			currentBlock.UndoMove(coordinate.row, coordinate.column);
+			std::cout << "test! " << i << " ";
+		}
+	}
+
+	return coordinate;
+};
+
+
+
+void Game::CheckCollisions(int initRot, int finalRot)
 {
-	std::vector<std::vector<std::pair<int, int>>> table = Table();
-	
-	return ComputeResultantCoordinate(table[static_cast<size_t>(initRotate)][0], table[static_cast<size_t>(finalRotate)][0]);
+	GetMoveCoordinate(initRot, finalRot);
 }
 
 // Rotation
@@ -161,21 +161,22 @@ void Game::RotateBlockClockwise()
 	int initRotationState = currentBlock.rotationState;
 	currentBlock.rotationState = (currentBlock.rotationState + 1) % 4;
 
-	std::pair<int, int> moveCoordinate = GetMoveCoordinate(initRotationState, currentBlock.rotationState);
-
-	if (currentBlock.id == 1)
-	{
-		currentBlock.Move(moveCoordinate.first, moveCoordinate.second);
-	}
+	CheckCollisions(initRotationState, currentBlock.rotationState);
 
 }
 void Game::RotateBlockCounterClockwise()
 {
+	int initRotationState = currentBlock.rotationState;
 	currentBlock.rotationState = (currentBlock.rotationState + 3) % 4;
+
+	CheckCollisions(initRotationState, currentBlock.rotationState);
 }
 void Game::Rotate180()
 {
+	int initRotationState = currentBlock.rotationState;
 	currentBlock.rotationState = (currentBlock.rotationState + 2) % 4;
+
+	CheckCollisions(initRotationState, currentBlock.rotationState);
 }
 
 

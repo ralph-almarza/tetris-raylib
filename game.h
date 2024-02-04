@@ -48,6 +48,11 @@ private:
 	bool IsBlockInsideLeft();
 	bool DoesBlockFit();
 	
+	void CheckCollisions(int initRot, int finalRot);
+
+	Position ComputeResultantCoordinate(Position initial, Position final);
+	Position GetMoveCoordinate(int initRotate, int finalRotate);
+
 	// Reset Game
 	void Reset();
 
