@@ -14,11 +14,11 @@ Game::Game()
 void Game::Update()
 {
 
-	//BlockGravity();
+	BlockGravity();
 	Draw();
 
-	//if (!DoesBlockFit())
-		//Reset();
+	if (!DoesBlockFit())
+		Reset();
 }
 
 void Game::Draw() // Draws the object in the game screen
@@ -36,7 +36,7 @@ void Game::Reset()
 
 	currentBlock = GetRandomBlock();
 	currentBlock.ResetPosition();
-	
+
 	isHoldEmpty = true;
 	isHoldUsed = false;
 	lastUpdateTime = 0;
@@ -186,27 +186,24 @@ void Game::HoldBlock()
 {
 	if (!isHoldUsed)
 	{
-		currentBlock.ResetPosition();
-
 		if (isHoldEmpty)
 		{
 			// Remove the current block from the screen
 			heldBlock = { currentBlock };
+			heldBlock.ResetPosition();
 
 			// Get the next block in the bag to replace the held block
 			currentBlock = { GetRandomBlock() };
+			currentBlock.ResetPosition();
 
 			isHoldEmpty = { false };
 			isHoldUsed = { true };
 
 		}
-		else if (!isHoldEmpty)
-		{
-			// Swap the held block with the current block
-			std::swap(heldBlock, currentBlock);
 
-			isHoldUsed = { true };
-		}
+		std::swap(heldBlock, currentBlock);
+		isHoldUsed = { true };
+
 	}
 }
 void Game::HardDropBlock()
@@ -244,7 +241,6 @@ bool Game::DoesBlockFit()
 	}
 	return true;
 }
-
 
 
 // Ghost Block Logic and Implementation
