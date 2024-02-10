@@ -6,6 +6,7 @@
 
 #include <utility>
 
+#include "configs.h"
 
 Game::Game()
 {
@@ -14,7 +15,6 @@ Game::Game()
 
 void Game::Update()
 {
-	
 	//BlockGravity();
 	Draw();
 
@@ -52,34 +52,34 @@ void Game::Reset()
 // Game Controls Methods
 void Game::HandleInput()
 {
-	HandleDelayedInput(KEY_LEFT, &Game::MoveBlockLeft);
-	HandleDelayedInput(KEY_RIGHT, &Game::MoveBlockRight);
+	HandleDelayedInput(moveRightKey, &Game::MoveBlockRight);
+	HandleDelayedInput(moveLeftKey, &Game::MoveBlockLeft);
 
 	int keyPressed = GetKeyPressed();
 	switch (keyPressed)
 	{
-	case KEY_RIGHT:
+	case moveRightKey:
 		MoveBlockRight();
 		break;
-	case KEY_LEFT:
+	case moveLeftKey:
 		MoveBlockLeft();
 		break;
-	case KEY_PERIOD:
+	case rotateRightKey:
 		RotateBlockClockwise();
 		break;
-	case KEY_COMMA:
-		RotateBlockCounterClockwise();
+	case rotateLeftKey:
+		RotateBlockCounterClockwise();	
 		break;
-	case KEY_SLASH:
+	case rotate180Key:
 		Rotate180();
 		break;
-	case KEY_H:
+	case holdKey:
 		HoldBlock();
 		break;
-	case KEY_SPACE:
+	case hardDropKey:
 		HardDropBlock();
 		break;
-	case KEY_N:
+	case softDropKey:
 		SoftDropBlock();
 		break;
 	}
@@ -92,7 +92,9 @@ void Game::HandleDelayedInput(int key, void (Game::*actionFunction)())
 		dasTime += GetFrameTime();
 
 		if (arrTime >= arrDelay && dasTime >= dasDelay)
+		{
 			(this->*actionFunction)();
+		}
 	}
 	else if (IsKeyReleased(key))
 		arrTime = 0;
@@ -103,7 +105,9 @@ void Game::MoveBlock(int rowChange, int colChange)
 {
 	currentBlock.Move(rowChange, colChange);
 	if (!DoesBlockFit())
+	{
 		currentBlock.Move(-rowChange, -colChange);
+	}
 }
 void Game::MoveBlockRight()
 {
@@ -116,11 +120,6 @@ void Game::MoveBlockLeft()
 void Game::MoveBlockDown()
 {
 	MoveBlock(1, 0);
-
-	if (!DoesBlockFit())
-	{
-		currentBlock.UndoMove(1, 0);
-	}
 }
 
 
@@ -192,24 +191,21 @@ void Game::HoldBlock()
 {
 	if (!isHoldUsed)
 	{
+		isHoldUsed = { true };
+
 		if (isHoldEmpty)
 		{
+			isHoldEmpty = { false };
+
 			// Remove the current block from the screen
 			heldBlock = { currentBlock };
 			heldBlock.ResetPosition();
 
-			// Get the next block in the bag to replace the held block
 			currentBlock = { GetRandomBlock() };
 			currentBlock.ResetPosition();
-
-			isHoldEmpty = { false };
-			isHoldUsed = { true };
-
 		}
 
 		std::swap(heldBlock, currentBlock);
-		isHoldUsed = { true };
-
 	}
 }
 void Game::HardDropBlock()
@@ -227,8 +223,8 @@ void Game::DropBlock()
 }
 void Game::LockBlock()
 {
-	for (Position item : currentBlock.GetCellPosition())
-		grid.grid[item.row][item.column] = { currentBlock.id };
+	for (Position cell : currentBlock.GetCellPosition())
+		grid.grid[cell.row][cell.column] = { currentBlock.id };
 
 	currentBlock = GetRandomBlock();
 	currentBlock.ResetPosition();
@@ -240,9 +236,9 @@ void Game::LockBlock()
 // Collision Detection
 bool Game::DoesBlockFit()
 {
-	for (Position item : currentBlock.GetCellPosition())
+	for (Position cell : currentBlock.GetCellPosition())
 	{
-		if (!grid.IsCellEmpty(item.row, item.column))
+		if (!grid.IsCellEmpty(cell.row, cell.column))
 			return false;
 	}
 	return true;
@@ -282,7 +278,7 @@ Block Game::GetRandomBlock()
 	if (blockBag.empty())
 		RandomizeBag();
 
-	currentBlock = blockBag[0]; // Gets the first element of the random block
+	currentBlock = blockBag[0];
 	blockBag.erase(blockBag.begin());
 
 	return currentBlock;
