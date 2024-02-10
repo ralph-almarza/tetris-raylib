@@ -2,10 +2,12 @@
 #include <raylib.h>
 #include "game.h"
 
+#include "constants.h"
+
 int main()
 {
 	SetTargetFPS(60);
-	InitWindow(1500, 1500, "Raylib Tetris");
+	InitWindow(windowWidth, windowHeight, "Raylib Tetris");
 	
 	Game game{};
 

@@ -3,13 +3,13 @@
 
 #include "grid.h"
 #include "colors.h"
+#include "constants.h"
 
-Grid::Grid() // Constructor
+Grid::Grid()
 {
 	Initialize();
 	numRows = { 22 };
 	numColumns = { 10 };
-	cellSize = { 65 };
 
 	colors = GetCellColors();
 }
@@ -41,9 +41,11 @@ void Grid::Draw() // draws the grid in raylib game window
 	{
 		for (int column{ 0 }; column < numColumns; ++column)
 		{
-			int cellValue = { grid[row][column] }; // cell changes color based on cellValue, default value is 0
-			DrawRectangle(column * cellSize + pixelOffset, row * cellSize + pixelOffset,
-				cellSize - pixelOffset, cellSize - pixelOffset, colors[static_cast<unsigned int>(cellValue)]);
+			int cellValue = { grid[row][column] }; 
+			DrawRectangle(((column * cellSize) + gridPixelOffset), 
+				((row * cellSize) + gridPixelOffset),
+				cellSize - gridPixelOffset, cellSize - gridPixelOffset, 
+				colors[static_cast<unsigned int>(cellValue)]);
 		}
 	}
 }
@@ -66,10 +68,6 @@ bool Grid::IsRowFull(int row)
 			return false;
 	}
 	return true;
-}
-int Grid::GetRows()
-{
-	return numRows;
 }
 
 // Line Clears
@@ -104,6 +102,10 @@ void Grid::MoveRowDown(int row, int completed)
 		grid[row + completed][column] = grid[row][column];
 		grid[row][column] = 0;
 	}
+}
+int Grid::GetRows()
+{
+	return numRows;
 }
 
 

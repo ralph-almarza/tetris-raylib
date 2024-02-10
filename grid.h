@@ -26,8 +26,5 @@ private:
 
 	int numRows{};					// height of game grid 
 	int numColumns{};				// width of game grid 
-	int cellSize{};					// # of pixels denoting one cell in game grid 
 	std::vector<Color> colors{};	// 'Color' is a type available in raylib
-	int pixelOffset{ 1 };			// used for making the grid lines visible
-
 };
