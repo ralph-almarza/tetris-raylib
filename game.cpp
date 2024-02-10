@@ -6,6 +6,7 @@
 
 #include <utility>
 
+
 Game::Game()
 {
 	Reset();
@@ -13,8 +14,8 @@ Game::Game()
 
 void Game::Update()
 {
-
-	BlockGravity();
+	
+	//BlockGravity();
 	Draw();
 
 	if (!DoesBlockFit())
@@ -115,6 +116,11 @@ void Game::MoveBlockLeft()
 void Game::MoveBlockDown()
 {
 	MoveBlock(1, 0);
+
+	if (!DoesBlockFit())
+	{
+		currentBlock.UndoMove(1, 0);
+	}
 }
 
 
@@ -247,6 +253,7 @@ bool Game::DoesBlockFit()
 void Game::DrawGhostBlock(const Block& block)
 {
 	Block ghost = block;
+
 	ghost.Move(BlockDropDistance(), 0);
 	ghost.Draw();
 }
