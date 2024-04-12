@@ -27,6 +27,7 @@ void Game::Draw() // Draws the object in the game screen
 	grid.Draw();
 	DrawGhostBlock(currentBlock);
 	currentBlock.Draw();
+	heldBlock.Draw();
 }
 void Game::Reset()
 {
@@ -152,8 +153,6 @@ Position Game::GetMoveCoordinate(int initRot, int finalRot)
 	return coordinate;
 };
 
-
-
 void Game::CheckCollisions(int initRot, int finalRot)
 {
 	GetMoveCoordinate(initRot, finalRot);
@@ -187,25 +186,24 @@ void Game::Rotate180()
 
 
 // Holding, Locking and Dropping
-void Game::HoldBlock()
-{
-	if (!isHoldUsed)
-	{
-		isHoldUsed = { true };
-
-		if (isHoldEmpty)
-		{
+void Game::HoldBlock() {
+	if (!isHoldUsed) {
+		if (isHoldEmpty) {
 			isHoldEmpty = { false };
+			heldBlock = currentBlock;
+			heldBlock.ResetPosition();
 
 			// Remove the current block from the screen
-			heldBlock = { currentBlock };
-			heldBlock.ResetPosition();
 
 			currentBlock = { GetRandomBlock() };
 			currentBlock.ResetPosition();
 		}
+		else {
+			std::swap(heldBlock, currentBlock);
+			heldBlock.ResetPosition();
+		}
 
-		std::swap(heldBlock, currentBlock);
+		isHoldUsed = { true };
 	}
 }
 void Game::HardDropBlock()

@@ -24,7 +24,7 @@ private:
 	void ClearRow(int row);
 	void MoveRowDown(int row, int numRows);
 
-	int numRows{};					// height of game grid 
-	int numColumns{};				// width of game grid 
+	int rows{};					// height of game grid 
+	int columns{};				// width of game grid 
 	std::vector<Color> colors{};	// 'Color' is a type available in raylib
 };

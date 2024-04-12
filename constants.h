@@ -1,6 +1,6 @@
 #pragma once
 
-const int windowHeight = 1500;
-const int windowWidth = 1500;
-const int cellSize = 65;
-const int gridPixelOffset = 1;
+const int WINDOW_HEIGHT = 1500;
+const int WINDOW_WIDTH = 1500;
+const int CELL_SIZE = 65;
+const int GRID_OFFSET = 1;

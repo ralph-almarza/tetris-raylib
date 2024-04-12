@@ -6,12 +6,12 @@
 
 int main()
 {
-	SetTargetFPS(60);
-	InitWindow(windowWidth, windowHeight, "Raylib Tetris");
+	SetTargetFPS(90);
+	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Raylib Tetris");
 	
 	Game game{};
 
-	while (WindowShouldClose() == false)
+	while (!WindowShouldClose())
 	{
 		game.HandleInput();
 

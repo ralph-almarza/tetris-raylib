@@ -5,65 +5,51 @@
 #include "colors.h"
 #include "constants.h"
 
-Grid::Grid()
-{
+Grid::Grid() {
 	Initialize();
-	numRows = { 22 };
-	numColumns = { 10 };
+	rows = { 22 };
+	columns = { 10 };
 
 	colors = GetCellColors();
 }
 
-void Grid::Initialize()
-{
-	for (int row{ 0 }; row < numRows; ++row)
-	{
-		for (int column{ 0 }; column < numColumns; ++column)
-		{
+void Grid::Initialize() {
+	for (int row{ 0 }; row < rows; ++row) {
+		for (int column{ 0 }; column < columns; ++column) {
 			grid[row][column] = 0;
 		}
 	}
 }
-void Grid::Print() // outputs the grid in console
-{
-	for (int row{ 0 }; row < numRows; ++row)
-	{
-		for (int column{ 0 }; column < numColumns; ++column)
-		{
+void Grid::Print() { // outputs the grid in console
+	for (int row{ 0 }; row < rows; ++row) {
+		for (int column{ 0 }; column < columns; ++column) {
 			std::cout << grid[row][column] << " ";
 		}
 		std::cout << std::endl;
 	}
 }
-void Grid::Draw() // draws the grid in raylib game window
-{
-	for (int row{ 0 }; row < numRows; ++row)
-	{
-		for (int column{ 0 }; column < numColumns; ++column)
-		{
+void Grid::Draw() { // draws the grid in raylib game window 
+	for (int row{ 0 }; row < rows; ++row) {
+		for (int column{ 0 }; column < columns; ++column) {
 			int cellValue = { grid[row][column] }; 
-			DrawRectangle(((column * cellSize) + gridPixelOffset), 
-				((row * cellSize) + gridPixelOffset),
-				cellSize - gridPixelOffset, cellSize - gridPixelOffset, 
-				colors[static_cast<unsigned int>(cellValue)]);
+			DrawRectangle(((column * CELL_SIZE) + GRID_OFFSET), ((row * CELL_SIZE) + GRID_OFFSET),
+				CELL_SIZE - GRID_OFFSET, CELL_SIZE - GRID_OFFSET, colors[static_cast<unsigned int>(cellValue)]);
 		}
 	}
 }
 
 
 // Used for Collision and Boundary Checks
-bool Grid::IsCellInside(int row, int column)
-{
-	return (row >= 0 && row < numRows) && (column >= 0 && column < numColumns);
+bool Grid::IsCellInside(int row, int column) {
+	return (row >= 0 && row < rows) && (column >= 0 && column < columns);
 }
-bool Grid::IsCellEmpty(int row, int column)
-{
+
+bool Grid::IsCellEmpty(int row, int column) {
 	return IsCellInside(row, column) && (grid[row][column] == 0);
 }
-bool Grid::IsRowFull(int row)
-{
-	for (int column = 0; column < numColumns; column++)
-	{
+
+bool Grid::IsRowFull(int row) {
+	for (int column = 0; column < columns; column++) {
 		if (grid[row][column] == 0)
 			return false;
 	}
@@ -71,41 +57,32 @@ bool Grid::IsRowFull(int row)
 }
 
 // Line Clears
-int Grid::ClearFullRows()
-{
+int Grid::ClearFullRows() {
 	int completed = 0;
-	for (int row = numRows - 1; row >= 0; row--)
-	{
-		if (IsRowFull(row))
-		{
+	for (int row = rows - 1; row >= 0; row--) {
+		if (IsRowFull(row)) {
 			ClearRow(row);
 			completed++;
 		}
-		else if (completed > 0)
-		{
+		else if (completed > 0) {
 			MoveRowDown(row, completed);
 		}
 	}
 	return completed;
 }
-void Grid::ClearRow(int row)
-{
-	for (int column = 0; column < numColumns; column++)
-	{
+void Grid::ClearRow(int row) {
+	for (int column = 0; column < columns; column++) {
 		grid[row][column] = 0;
 	}
 }
-void Grid::MoveRowDown(int row, int completed)
-{
-	for (int column = 0; column < numColumns; column++)
-	{
+void Grid::MoveRowDown(int row, int completed) {
+	for (int column = 0; column < columns; column++) {
 		grid[row + completed][column] = grid[row][column];
 		grid[row][column] = 0;
 	}
 }
-int Grid::GetRows()
-{
-	return numRows;
+int Grid::GetRows() {
+	return rows;
 }
 
 

@@ -43,9 +43,6 @@ private:
 	bool EventTriggered(double interval);
 
 	// Collision Methods
-	void CheckForKicks();
-	bool IsBlockInsideRight();
-	bool IsBlockInsideLeft();
 	bool DoesBlockFit();
 	
 	void CheckCollisions(int initRot, int finalRot);
@@ -57,6 +54,7 @@ private:
 	void Reset();
 
 	// Variables
+	
 	Block currentBlock{};
 	Block heldBlock{};
 	std::vector<Block> blockBag{};
