@@ -2,8 +2,6 @@
 
 Block::Block()
 {
-	cellSize = { 65 };
-	pixelOffset = { 1 };
 	colors = { GetCellColors() };
 
 	rotationState = { 0 }; 
@@ -17,13 +15,13 @@ Block::Block()
 void Block::Draw() {
 	std::vector<Position> tiles = GetCellPosition();
 	for (const Position& tilePosition : tiles) {
-		DrawRectangle(tilePosition.column * cellSize + pixelOffset, tilePosition.row * cellSize + pixelOffset,
-			cellSize - pixelOffset, cellSize - pixelOffset, colors[static_cast<unsigned int>(id)]);
+		DrawRectangle(tilePosition.column * CELL_SIZE + GRID_OFFSET, tilePosition.row * CELL_SIZE + GRID_OFFSET,
+			CELL_SIZE - GRID_OFFSET, CELL_SIZE - GRID_OFFSET, colors[static_cast<unsigned int>(id)]);
 	}
 
 }
 
-void Block::Move(int row, int column) // Used to change the block's position in the grid
+void Block::Move(int row, int column)
 {
 	rowOffset += row;
 	columnOffset += column;
@@ -52,8 +50,7 @@ std::vector<Position> Block::GetCellPosition() // Gets current position of block
 
 void Block::ResetPosition() // Occurs when block is held
 {
-	rotationState = 0; // Position resets typically involves resetting rotation
-
+	rotationState = 0; 
 	// Move the current block back to its initial position
 	switch (id)
 	{

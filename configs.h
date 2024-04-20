@@ -12,5 +12,5 @@
 #define softDropKey KEY_N
 #define holdKey KEY_LEFT_SHIFT
 
-#define das 0.100f
+#define das 0.090f
 #define arr 0.0f

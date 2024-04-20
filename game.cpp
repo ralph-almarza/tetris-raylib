@@ -1,34 +1,31 @@
 #include <random> // For generating random blocks
 #include <algorithm> // For seeding the RNG
 #include "game.h"
-
 #include <iostream>
-
 #include <utility>
-
 #include "configs.h"
 
-Game::Game()
-{
+
+Game::Game() {
 	Reset();
 }
 
-void Game::Update()
-{
-	//BlockGravity();
+void Game::Update() {
+	BlockGravity();
 	Draw();
 
 	if (!DoesBlockFit())
 		Reset();
 }
 
-void Game::Draw() // Draws the object in the game screen
-{
+void Game::Draw() { // Draws the object in the game screen
 	grid.Draw();
 	DrawGhostBlock(currentBlock);
 	currentBlock.Draw();
-	heldBlock.Draw();
+	DrawHoldBlock(heldBlock);
+	DrawNextBlock(currentBlock); // errors when 7th block
 }
+
 void Game::Reset()
 {
 	grid.Initialize();
@@ -49,6 +46,22 @@ void Game::Reset()
 	dasDelay = 0.5;
 	
 }
+
+void Game::DrawHoldBlock(const Block& block) {
+	Block hold = block;
+
+	hold.Move(0, 10);
+	hold.Draw();
+}
+
+void Game::DrawNextBlock(const Block& block)
+{
+	Block ghost = block;
+
+	ghost.Move(3, 10);
+	ghost.Draw();
+}
+
 
 // Game Controls Methods
 void Game::HandleInput()
@@ -102,35 +115,28 @@ void Game::HandleDelayedInput(int key, void (Game::*actionFunction)())
 }
 
 // Movement
-void Game::MoveBlock(int rowChange, int colChange)
-{
+void Game::MoveBlock(int rowChange, int colChange) {
 	currentBlock.Move(rowChange, colChange);
-	if (!DoesBlockFit())
-	{
+	if (!DoesBlockFit()) {
 		currentBlock.Move(-rowChange, -colChange);
 	}
 }
-void Game::MoveBlockRight()
-{
+void Game::MoveBlockRight() {
 	MoveBlock(0, 1);
 }
-void Game::MoveBlockLeft()
-{
+void Game::MoveBlockLeft() {
 	MoveBlock(0, -1);
 }
-void Game::MoveBlockDown()
-{
+void Game::MoveBlockDown() {
 	MoveBlock(1, 0);
 }
 
 
-Position Game::ComputeResultantCoordinate(Position initial, Position final)
-{
+Position Game::ComputeResultantCoordinate(Position initial, Position final) {
 	return { final.row - initial.row, final.column - initial.column};
 }
 
-Position Game::GetMoveCoordinate(int initRot, int finalRot)
-{
+Position Game::GetMoveCoordinate(int initRot, int finalRot) {
 	Position coordinate{ 0,0 };
 
 	for (unsigned int i = 0; i < currentBlock.offsets[initRot].size(); ++i)
@@ -153,30 +159,25 @@ Position Game::GetMoveCoordinate(int initRot, int finalRot)
 	return coordinate;
 };
 
-void Game::CheckCollisions(int initRot, int finalRot)
-{
+void Game::CheckCollisions(int initRot, int finalRot) {
 	GetMoveCoordinate(initRot, finalRot);
 }
 
 // Rotation
-// For the rotation states, modular arithmetic was used
-void Game::RotateBlockClockwise()
-{
+void Game::RotateBlockClockwise() {
 	int initRotationState = currentBlock.rotationState;
 	currentBlock.rotationState = (currentBlock.rotationState + 1) % 4;
 
 	CheckCollisions(initRotationState, currentBlock.rotationState);
 
 }
-void Game::RotateBlockCounterClockwise()
-{
+void Game::RotateBlockCounterClockwise() {
 	int initRotationState = currentBlock.rotationState;
 	currentBlock.rotationState = (currentBlock.rotationState + 3) % 4;
 
 	CheckCollisions(initRotationState, currentBlock.rotationState);
 }
-void Game::Rotate180()
-{
+void Game::Rotate180() {
 	int initRotationState = currentBlock.rotationState;
 	currentBlock.rotationState = (currentBlock.rotationState + 2) % 4;
 
@@ -206,13 +207,11 @@ void Game::HoldBlock() {
 		isHoldUsed = { true };
 	}
 }
-void Game::HardDropBlock()
-{
+void Game::HardDropBlock() {
 	DropBlock();
 	LockBlock();
 }
-void Game::SoftDropBlock()
-{
+void Game::SoftDropBlock() {
 	DropBlock();
 }
 void Game::DropBlock()
@@ -251,6 +250,7 @@ void Game::DrawGhostBlock(const Block& block)
 	ghost.Move(BlockDropDistance(), 0);
 	ghost.Draw();
 }
+
 int Game::TileDropDistance(const Position& block)
 {
 	int dropDistance{ 0 };

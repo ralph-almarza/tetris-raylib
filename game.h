@@ -14,6 +14,10 @@ public:
 	Grid grid{};
 
 private:
+	void DrawHoldBlock(const Block& block);
+	void DrawNextBlock(const Block& block);
+
+
 	// Game Controls Methods
 	void HandleDelayedInput(int key, void (Game::* actionFunction)());
 	void MoveBlock(int rowChange, int colChange);
@@ -49,6 +53,7 @@ private:
 
 	Position ComputeResultantCoordinate(Position initial, Position final);
 	Position GetMoveCoordinate(int initRotate, int finalRotate);
+
 
 	// Reset Game
 	void Reset();

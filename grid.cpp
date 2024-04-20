@@ -20,15 +20,8 @@ void Grid::Initialize() {
 		}
 	}
 }
-void Grid::Print() { // outputs the grid in console
-	for (int row{ 0 }; row < rows; ++row) {
-		for (int column{ 0 }; column < columns; ++column) {
-			std::cout << grid[row][column] << " ";
-		}
-		std::cout << std::endl;
-	}
-}
-void Grid::Draw() { // draws the grid in raylib game window 
+
+void Grid::Draw() {
 	for (int row{ 0 }; row < rows; ++row) {
 		for (int column{ 0 }; column < columns; ++column) {
 			int cellValue = { grid[row][column] }; 
@@ -39,7 +32,7 @@ void Grid::Draw() { // draws the grid in raylib game window
 }
 
 
-// Used for Collision and Boundary Checks
+// Collision and Boundary Checks
 bool Grid::IsCellInside(int row, int column) {
 	return (row >= 0 && row < rows) && (column >= 0 && column < columns);
 }

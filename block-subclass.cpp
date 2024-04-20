@@ -1,8 +1,6 @@
 #include "block.h"
 #include "position.h"
 
-// Updated I and O blocks
-
 class IBlock : public Block
 {
 public: 

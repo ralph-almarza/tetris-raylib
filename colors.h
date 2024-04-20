@@ -1,12 +1,6 @@
 #pragma once
-#include <raylib.h> // in order to use the 'Color' struct
+#include <raylib.h>
 #include <vector>
-
-// 'extern' keyword was used to declare a variable in this file 
-// and to use it in another file
-
-// variables are declared here but not defined
-// see implementation file (colors.cpp) for color definitions
 
 extern const Color darkGrey;
 extern const Color cyan;

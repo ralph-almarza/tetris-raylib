@@ -9,7 +9,6 @@ constexpr Color orange		= { 226, 116, 17, 255 };	// L-piece
 constexpr Color blue		= { 77, 157, 224, 255 };	// J-piece
 constexpr Color purple		= { 119, 104, 174, 255 };	// T-piece
 
-std::vector<Color> GetCellColors() noexcept // gets the color of the cell based on its value
-{
+std::vector<Color> GetCellColors() noexcept {
 	return { darkGrey, cyan, yellow, green, red, orange, blue, purple };
 }
