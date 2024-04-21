@@ -1,8 +1,8 @@
 #include <random> // For generating random blocks
 #include <algorithm> // For seeding the RNG
-#include "game.h"
 #include <iostream>
 #include <utility>
+#include "game.h"
 #include "configs.h"
 
 
@@ -53,7 +53,6 @@ void Game::DrawHoldBlock(const Block& block) {
 	hold.Move(0, 10);
 	hold.Draw();
 }
-
 void Game::DrawNextBlock(const Block& block)
 {
 	Block ghost = block;
@@ -61,39 +60,45 @@ void Game::DrawNextBlock(const Block& block)
 	ghost.Move(3, 10);
 	ghost.Draw();
 }
+void Game::DrawGhostBlock(const Block& block)
+{
+	Block ghost = block;
 
+	ghost.Move(BlockDropDistance(), 0);
+	ghost.Draw();
+}
 
 // Game Controls Methods
 void Game::HandleInput()
 {
-	HandleDelayedInput(moveRightKey, &Game::MoveBlockRight);
-	HandleDelayedInput(moveLeftKey, &Game::MoveBlockLeft);
+	HandleDelayedInput(MOVE_RIGHT, &Game::MoveBlockRight);
+	HandleDelayedInput(MOVE_LEFT, &Game::MoveBlockLeft);
 
 	int keyPressed = GetKeyPressed();
 	switch (keyPressed)
 	{
-	case moveRightKey:
+	case MOVE_RIGHT:
 		MoveBlockRight();
 		break;
-	case moveLeftKey:
+	case MOVE_LEFT:
 		MoveBlockLeft();
 		break;
-	case rotateRightKey:
+	case ROTATE_CW:
 		RotateBlockClockwise();
 		break;
-	case rotateLeftKey:
+	case ROTATE_CCW:
 		RotateBlockCounterClockwise();	
 		break;
-	case rotate180Key:
+	case ROTATE_180:
 		Rotate180();
 		break;
-	case holdKey:
+	case HOLD:
 		HoldBlock();
 		break;
-	case hardDropKey:
+	case HARD_DROP:
 		HardDropBlock();
 		break;
-	case softDropKey:
+	case SOFT_DROP:
 		SoftDropBlock();
 		break;
 	}
@@ -135,7 +140,6 @@ void Game::MoveBlockDown() {
 Position Game::ComputeResultantCoordinate(Position initial, Position final) {
 	return { final.row - initial.row, final.column - initial.column};
 }
-
 Position Game::GetMoveCoordinate(int initRot, int finalRot) {
 	Position coordinate{ 0,0 };
 
@@ -158,7 +162,6 @@ Position Game::GetMoveCoordinate(int initRot, int finalRot) {
 
 	return coordinate;
 };
-
 void Game::CheckCollisions(int initRot, int finalRot) {
 	GetMoveCoordinate(initRot, finalRot);
 }
@@ -243,14 +246,6 @@ bool Game::DoesBlockFit()
 
 
 // Ghost Block Logic and Implementation
-void Game::DrawGhostBlock(const Block& block)
-{
-	Block ghost = block;
-
-	ghost.Move(BlockDropDistance(), 0);
-	ghost.Draw();
-}
-
 int Game::TileDropDistance(const Position& block)
 {
 	int dropDistance{ 0 };

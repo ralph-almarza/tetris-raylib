@@ -1,16 +1,16 @@
 #pragma once
 #include <raylib.h>
 
-#define moveLeftKey KEY_X
-#define moveRightKey KEY_C
+#define MOVE_LEFT KEY_X
+#define MOVE_RIGHT KEY_C
 
-#define rotateLeftKey KEY_COMMA
-#define rotateRightKey KEY_PERIOD
-#define rotate180Key KEY_SLASH
+#define ROTATE_CCW KEY_COMMA
+#define ROTATE_CW KEY_PERIOD
+#define ROTATE_180 KEY_SLASH
 
-#define hardDropKey KEY_SPACE
-#define softDropKey KEY_N
-#define holdKey KEY_LEFT_SHIFT
+#define HARD_DROP KEY_SPACE
+#define SOFT_DROP KEY_N
+#define HOLD KEY_LEFT_SHIFT
 
-#define das 0.090f
-#define arr 0.0f
+#define DAS 0.090f	// milliseconds
+#define ARR 0.0f	// milliseconds
