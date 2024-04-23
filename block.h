@@ -3,7 +3,7 @@
 #include <map>
 #include "position.h"
 #include "colors.h"
-#include "constants.h"
+#include "settings.h"
 
 class Block
 {

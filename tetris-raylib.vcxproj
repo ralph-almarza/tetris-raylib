@@ -157,8 +157,7 @@
   <ItemGroup>
     <ClInclude Include="block.h" />
     <ClInclude Include="colors.h" />
-    <ClInclude Include="configs.h" />
-    <ClInclude Include="constants.h" />
+    <ClInclude Include="settings.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="grid.h" />
     <ClInclude Include="position.h" />

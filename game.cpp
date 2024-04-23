@@ -3,7 +3,7 @@
 #include <iostream>
 #include <utility>
 #include "game.h"
-#include "configs.h"
+#include "settings.h"
 
 
 Game::Game() {

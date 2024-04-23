@@ -3,7 +3,7 @@
 
 #include "grid.h"
 #include "colors.h"
-#include "constants.h"
+#include "settings.h"
 
 Grid::Grid() {
 	Initialize();

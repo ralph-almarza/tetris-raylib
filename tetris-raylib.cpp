@@ -2,7 +2,7 @@
 #include <raylib.h>
 #include "game.h"
 
-#include "constants.h"
+#include "settings.h"
 
 int main()
 {
